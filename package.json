@@ -1,0 +1,15 @@
+{
+  "author": "Stephen Ullom",
+  "description": "Generate UI prototypes with hyperspeed.",
+  "license": "ISC",
+  "main": "proto.js",
+  "name": "proto",
+  "scripts": {
+    "start": "tsc && node dist/project/main"
+  },
+  "type": "commonjs",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@types/node": "^20.1.0"
+  }
+}
