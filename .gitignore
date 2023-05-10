@@ -1,5 +1,5 @@
 # Project files
-node_modules
+node_modules/
 
 # Output files
-dist
+dist/
