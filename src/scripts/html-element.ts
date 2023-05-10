@@ -1,4 +1,4 @@
-import { CssStyles, Html, HtmlAttributes } from "./models/properties.model";
+import { CssStyles, Html, HtmlAttributes } from "../models/html.model";
 
 export class HtmlElement {
   public name: string;

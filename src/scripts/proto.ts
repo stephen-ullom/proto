@@ -1,11 +1,12 @@
 import { readFile, readFileSync, writeFile } from "fs";
-import { HtmlElement } from "./xml-element";
+import { HtmlElement } from "./html-element";
 import {
   FrameProperties,
-  Html,
   TextProperties,
   ImageProperties,
-} from "./models/properties.model";
+} from "../models/properties.model";
+import { Html } from "../models/html.model";
+import { createServer } from "http";
 
 export function frame(...parameters: (FrameProperties | Html)[]): string {
   const element = new HtmlElement("div");
@@ -85,14 +86,26 @@ export function include(...parameters: (ImageProperties | string)[]) {
 }
 
 export function render(...content: Html[]) {
-  readFile("template.html", { encoding: "utf-8" }, (error, template) => {
+  readFile("templates/default.html", { encoding: "utf-8" }, (error, template) => {
     const html = template.replace("{content}", content.join(""));
-    writeFile("index.html", html, (error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log(html);
-      }
+    // writeFile("index.html", html, (error) => {
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     console.log(html);
+    //   }
+    // });
+
+    const hostname = "localhost";
+    const port = 8000;
+
+    const server = createServer((req, res) => {
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.end(html);
+    });
+
+    server.listen(port, hostname, () => {
+      console.log(`Server running at http://${hostname}:${port}/`);
     });
   });
 }

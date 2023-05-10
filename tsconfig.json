@@ -2,8 +2,6 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "sourceMap": true,
-    "module": "CommonJS",
-    "lib": ["ES2015"]
+    "declaration": true
   }
 }

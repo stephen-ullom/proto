@@ -1,14 +1,21 @@
 {
-  "author": "Stephen Ullom",
-  "description": "Generate UI prototypes with hyperspeed.",
-  "license": "ISC",
-  "main": "proto.js",
   "name": "proto",
-  "scripts": {
-    "start": "tsc && node dist/project/main"
-  },
-  "type": "commonjs",
   "version": "1.0.0",
+  "description": "Generate UI prototypes with hyperspeed.",
+  "author": "Stephen Ullom",
+  "bin": {
+    "proto": "./dist/scripts/cli.js"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./models": "./dist/models/index.js"
+  },
+  "scripts": {
+    "build": "tsc && npm link"
+  },
+  "dependencies": {
+    "typescript": "^5.0.4"
+  },
   "devDependencies": {
     "@types/node": "^20.1.0"
   }

@@ -1,13 +1,3 @@
-export type Html = string;
-
-export type CssStyles = {
-  [property: string]: string;
-};
-
-export type HtmlAttributes = {
-  [name: string]: string;
-};
-
 export enum Direction {
   Vertical = "column",
   Horizontal = "row",
