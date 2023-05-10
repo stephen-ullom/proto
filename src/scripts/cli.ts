@@ -23,8 +23,12 @@ function init() {
 }
 
 function serve() {
-  readFile(mainFile, { encoding: "utf-8" }, (error, source) => {
+  readFile(mainFile, { encoding: "utf-8" }, (fileError, source) => {
     const main = transpile(source);
-    eval(main);
+    try {
+      eval(main);
+    } catch (evalError) {
+      log(evalError);
+    }
   });
 }
