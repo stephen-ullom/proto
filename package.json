@@ -11,7 +11,7 @@
     "./models": "./dist/models/index.js"
   },
   "scripts": {
-    "build": "tsc && npm link"
+    "build": "rm -rf dist/* && tsc && mkdir dist/templates && cp src/templates/* dist/templates/"
   },
   "dependencies": {
     "typescript": "^5.0.4"

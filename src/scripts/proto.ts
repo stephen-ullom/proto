@@ -1,12 +1,18 @@
-import { readFile, readFileSync, writeFile } from "fs";
-import { HtmlElement } from "./html-element";
+import { readFile, readFileSync } from "fs";
+import { Server, createServer } from "http";
+import { join } from "path";
+import { Html } from "../models/html.model";
 import {
   FrameProperties,
-  TextProperties,
   ImageProperties,
+  TextProperties,
 } from "../models/properties.model";
-import { Html } from "../models/html.model";
-import { createServer } from "http";
+import { HtmlElement } from "./html-element";
+
+const hostname = "localhost";
+const port = 8000;
+
+let server: Server;
 
 export function frame(...parameters: (FrameProperties | Html)[]): string {
   const element = new HtmlElement("div");
@@ -28,7 +34,7 @@ export function frame(...parameters: (FrameProperties | Html)[]): string {
 }
 
 export function text(...parameters: (TextProperties | string)[]) {
-  const element = new HtmlElement("p");
+  const element = new HtmlElement("span");
   const firstChild = parameters[0];
 
   if (typeof firstChild === "object") {
@@ -42,13 +48,6 @@ export function text(...parameters: (TextProperties | string)[]) {
     element.children.push(html);
   }
   return element.render();
-}
-
-export function repeat(
-  array: any[],
-  callback: (value: any, index: number, array: any[]) => Html
-) {
-  return array.map(callback).join("");
 }
 
 export function image(...parameters: (ImageProperties | string)[]) {
@@ -85,25 +84,25 @@ export function include(...parameters: (ImageProperties | string)[]) {
   return element.render();
 }
 
+export function repeat(
+  array: any[],
+  callback: (value: any, index: number, array: any[]) => Html
+) {
+  return array.map(callback).join("");
+}
+
 export function render(...content: Html[]) {
-  readFile("templates/default.html", { encoding: "utf-8" }, (error, template) => {
+  const templatePath = join(__dirname, "../templates/default.html");
+  readFile(templatePath, { encoding: "utf-8" }, (error, template) => {
     const html = template.replace("{content}", content.join(""));
-    // writeFile("index.html", html, (error) => {
-    //   if (error) {
-    //     console.log(error);
-    //   } else {
-    //     console.log(html);
-    //   }
-    // });
-
-    const hostname = "localhost";
-    const port = 8000;
-
-    const server = createServer((req, res) => {
+    if (server) {
+      console.log("Restarting server...");
+      server.close();
+    }
+    server = createServer((req, res) => {
       res.writeHead(200, { "Content-Type": "text/html" });
       res.end(html);
     });
-
     server.listen(port, hostname, () => {
       console.log(`Server running at http://${hostname}:${port}/`);
     });

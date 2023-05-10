@@ -3,6 +3,12 @@ export enum Direction {
   Horizontal = "row",
 }
 
+export enum Alignment {
+  Start = "start",
+  Center = "center",
+  End = "end",
+}
+
 export interface FrameProperties {
   // flow?: Direction;
   // cornerRadius?: number;
