@@ -11,11 +11,28 @@ export class HtmlElement {
     this.name = name;
   }
 
-  public setStyle(name: string, value: string | number): void {
+  public setStyle(cssProperty: string, value: string | number): void {
     if (Number.isInteger(value)) {
-      this.styles[name] = value + "px";
+      this.styles[cssProperty] = value + "px";
     } else {
-      this.styles[name] = value as string;
+      this.styles[cssProperty] = value as string;
+    }
+  }
+
+  public setProperty(name: string, value: any) {
+    switch (name) {
+      case "cornerRadius":
+        this.setStyle("border-radus", value);
+        break;
+      case "clipContent":
+        this.setStyle("overflow", value ? "hidden" : "auto");
+        break;
+      case "direction":
+        this.setStyle("flex-direction", value);
+        break;
+      default:
+        this.setStyle(name, value);
+        break;
     }
   }
 

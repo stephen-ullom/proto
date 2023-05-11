@@ -1,7 +1,7 @@
 import { readFile, readFileSync } from "fs";
 import { Server, createServer } from "http";
 import { join } from "path";
-import { Html } from "../models/html.model";
+import { Html, Sides } from "../models/html.model";
 import {
   FrameProperties,
   ImageProperties,
@@ -33,7 +33,7 @@ export function frame(...parameters: (FrameProperties | Html)[]): string {
   return element.render();
 }
 
-export function text(...parameters: (TextProperties | string)[]) {
+export function text(...parameters: (TextProperties | string)[]): Html {
   const element = new HtmlElement("span");
   const firstChild = parameters[0];
 
@@ -107,4 +107,13 @@ export function render(...content: Html[]) {
       console.log(`Server running at http://${hostname}:${port}/`);
     });
   });
+}
+
+export function sides(
+  top: number,
+  right: number,
+  bottom: number,
+  left: number
+): Sides {
+  return [top, right, bottom, left].join(" ");
 }

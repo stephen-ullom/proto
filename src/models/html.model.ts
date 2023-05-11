@@ -7,3 +7,5 @@ export type CssStyles = {
 export type HtmlAttributes = {
   [name: string]: string;
 };
+
+export type Sides = string;
