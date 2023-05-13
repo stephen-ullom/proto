@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
-import { Server, ServerResponse } from "http";
+import * as fs from "fs";
+import * as http from "http";
+import { ServerResponse } from "http";
 import * as path from "path";
 import * as ts from "typescript";
-import * as http from "http";
-import * as fs from "fs";
-
-// const args = process.argv.slice(2);
 
 const fileName = "main.ts";
 const projectDirectory = process.cwd();

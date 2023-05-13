@@ -5,19 +5,36 @@ import {
   Justification,
 } from "./property-values.model.js";
 
+export interface Property {
+  name: string;
+  type: any;
+  on?: string;
+  off?: string;
+}
+
+export interface Properties {
+  [property: string]: Property;
+}
+
 export interface ColorProperties {
   backgroundColor?: string;
   textColor?: string;
 }
 
+export interface TextProperties {
+  font?: string;
+  fontSize?: number;
+  textAlign?: Alignment;
+}
+
 export interface BoxProperties {
   width?: number;
   height?: number;
-  cornerRadius?: number;
-  clipContent?: boolean;
   padding?: number | Sides;
   margin?: number;
-  fitContent?: boolean;
+  cornerRadius?: number;
+  clipContent?: boolean;
+  fillContainer?: boolean;
 }
 
 export interface FrameProperties extends BoxProperties, ColorProperties {
@@ -25,22 +42,8 @@ export interface FrameProperties extends BoxProperties, ColorProperties {
   gap?: number;
   justifyContent?: Alignment | Justification;
   alignItems?: Alignment;
-  font?: string;
-}
-
-export interface TextProperties {
-  [key: string]: any;
 }
 
 export interface ImageProperties {
   [key: string]: any;
-}
-
-export interface Property {
-  cssProperty: string;
-  type: any;
-}
-
-export interface Properties {
-  [property: string]: Property;
 }

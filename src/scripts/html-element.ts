@@ -1,4 +1,5 @@
 import { CssStyles, Html, HtmlAttributes } from "../models/html.model.js";
+import { properties } from "./properties.js";
 
 export class HtmlElement {
   public name: string;
@@ -20,28 +21,16 @@ export class HtmlElement {
   }
 
   public setProperty(name: string, value: any) {
-    switch (name) {
-      // Layout
-      case "cornerRadius":
-        this.setStyle("border-radius", value);
-        break;
-      case "clipContent":
-        this.setStyle("overflow", value ? "hidden" : "auto");
-        break;
-      case "direction":
-        this.setStyle("flex-direction", value);
-        break;
-      // Style
-      case "textColor":
-        this.setStyle("color", value);
-        break;
-      case "font":
-        this.setStyle("font-family", value);
-        break;
-      default:
-        const cssName = name.replace(/([A-Z])/g, "-$1").toLowerCase();
-        this.setStyle(cssName, value);
-        break;
+    const property = properties[name];
+    if (property) {
+      if (property.type === Boolean) {
+        this.setStyle(property.name, value ? property.on : property.off);
+      } else {
+        this.setStyle(property.name, value);
+      }
+    } else {
+      const cssName = name.replace(/([A-Z])/g, "-$1").toLowerCase();
+      this.setStyle(cssName, value);
     }
   }
 
@@ -52,7 +41,7 @@ export class HtmlElement {
   public render(): Html {
     let styleString = "";
     for (const [key, value] of Object.entries(this.styles)) {
-      styleString += `${key}: ${value};`;
+      styleString += `${key}:${value};`;
     }
     if (styleString) {
       this.attributes["style"] = styleString;
