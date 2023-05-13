@@ -1,13 +1,13 @@
 import * as fs from "fs";
 import * as http from "http";
 import * as path from "path";
-import { Html, Sides } from "../models/html.model.js";
+import { Html, Sides } from "../models/html.model";
 import {
   FrameProperties,
-  ImageProperties,
+  IncludeProperties,
   TextProperties,
-} from "../models/properties.model.js";
-import { HtmlElement } from "./html-element.js";
+} from "../models/properties.model";
+import { HtmlElement } from "./html-element";
 
 const port = 2000;
 const projectDirectory = path.dirname(process.argv[1]);
@@ -48,29 +48,29 @@ export function text(...parameters: (TextProperties | string)[]): Html {
   return element.render();
 }
 
-export function image(...parameters: (ImageProperties | string)[]) {
-  const element = new HtmlElement("img");
-  const firstChild = parameters[0];
+// export function image(...parameters: (ImageProperties | string)[]) {
+//   const element = new HtmlElement("img");
+//   const firstChild = parameters[0];
 
-  if (typeof firstChild === "object") {
-    const properties = parameters.shift() as ImageProperties;
-    for (const [key, value] of Object.entries(properties)) {
-      element.setProperty(key, value);
-    }
-  }
-  for (const value of Object.values(parameters)) {
-    const source = value as string;
-    element.setAttribute("src", source);
-  }
-  return element.render();
-}
+//   if (typeof firstChild === "object") {
+//     const properties = parameters.shift() as ImageProperties;
+//     for (const [key, value] of Object.entries(properties)) {
+//       element.setProperty(key, value);
+//     }
+//   }
+//   for (const value of Object.values(parameters)) {
+//     const source = value as string;
+//     element.setAttribute("src", source);
+//   }
+//   return element.render();
+// }
 
-export function include(...parameters: (ImageProperties | string)[]) {
+export function include(...parameters: (IncludeProperties | string)[]) {
   const element = new HtmlElement("div");
   const firstChild = parameters[0];
 
   if (typeof firstChild === "object") {
-    const properties = parameters.shift() as ImageProperties;
+    const properties = parameters.shift() as IncludeProperties;
     for (const [key, value] of Object.entries(properties)) {
       element.setProperty(key, value);
     }

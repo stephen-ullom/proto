@@ -1,5 +1,5 @@
-import { CssStyles, Html, HtmlAttributes } from "../models/html.model.js";
-import { properties } from "./properties.js";
+import { CssStyles, Html, HtmlAttributes } from "../models/html.model";
+import { properties } from "./properties";
 
 export class HtmlElement {
   public name: string;
