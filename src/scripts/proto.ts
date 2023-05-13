@@ -78,7 +78,6 @@ export function include(...parameters: (IncludeProperties | string)[]) {
 
   const assetName = parameters[0] as string;
   const assetPath = path.join(projectDirectory, assetName);
-  console.log(assetPath);
   const file = fs.readFileSync(assetPath, { encoding: "utf-8" });
   const html = file.replace(/\n/g, "");
   element.children.push(html);

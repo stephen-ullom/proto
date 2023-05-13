@@ -24,7 +24,7 @@ function init() {
   startServer();
   run();
   fs.watchFile(mainPath, { interval: 500 }, (current, previous) => {
-    console.log("main.ts change");
+    console.log("Change detected");
     run();
   });
 }
@@ -37,8 +37,6 @@ function startServer() {
       "../../public",
       url === "/" ? "index.html" : url
     );
-
-    console.log({ filePath });
 
     fs.access(filePath, fs.constants.F_OK, (err) => {
       if (err) {
