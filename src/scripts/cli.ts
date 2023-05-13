@@ -119,6 +119,7 @@ function build() {
       baseUrl: projectDirectory,
       rootDir: "src",
       outDir: ".proto",
+      resolveJsonModule: true
     },
   });
 
