@@ -1,5 +1,6 @@
-import { readFileSync } from "fs";
+import * as fs from "fs";
 import * as http from "http";
+import * as path from "path";
 import { Html, Sides } from "../models/html.model.js";
 import {
   FrameProperties,
@@ -9,6 +10,7 @@ import {
 import { HtmlElement } from "./html-element.js";
 
 const port = 2000;
+const projectDirectory = path.dirname(process.argv[1]);
 
 export function frame(...parameters: (FrameProperties | Html)[]): string {
   const element = new HtmlElement("div");
@@ -19,7 +21,7 @@ export function frame(...parameters: (FrameProperties | Html)[]): string {
   if (typeof firstChild === "object") {
     const properties = parameters.shift() as FrameProperties;
     for (const [key, value] of Object.entries(properties)) {
-      element.setStyle(key, value);
+      element.setProperty(key, value);
     }
   }
   for (const value of Object.values(parameters)) {
@@ -36,7 +38,7 @@ export function text(...parameters: (TextProperties | string)[]): Html {
   if (typeof firstChild === "object") {
     const properties = parameters.shift() as TextProperties;
     for (const [key, value] of Object.entries(properties)) {
-      element.setStyle(key, value);
+      element.setProperty(key, value);
     }
   }
   for (const value of Object.values(parameters)) {
@@ -53,7 +55,7 @@ export function image(...parameters: (ImageProperties | string)[]) {
   if (typeof firstChild === "object") {
     const properties = parameters.shift() as ImageProperties;
     for (const [key, value] of Object.entries(properties)) {
-      element.setStyle(key, value);
+      element.setProperty(key, value);
     }
   }
   for (const value of Object.values(parameters)) {
@@ -70,13 +72,16 @@ export function include(...parameters: (ImageProperties | string)[]) {
   if (typeof firstChild === "object") {
     const properties = parameters.shift() as ImageProperties;
     for (const [key, value] of Object.entries(properties)) {
-      element.setStyle(key, value);
+      element.setProperty(key, value);
     }
   }
 
-  const path = parameters[0] as string;
-  const file = readFileSync(path, { encoding: "utf-8" });
-  element.children.push(file);
+  const assetName = parameters[0] as string;
+  const assetPath = path.join(projectDirectory, assetName);
+  console.log(assetPath);
+  const file = fs.readFileSync(assetPath, { encoding: "utf-8" });
+  const html = file.replace(/\n/g, "");
+  element.children.push(html);
   return element.render();
 }
 
@@ -108,5 +113,5 @@ export function sides(
   bottom: number,
   left: number
 ): Sides {
-  return [top, right, bottom, left].join(" ");
+  return [top, right, bottom, left].map((value) => value + "px").join(" ");
 }

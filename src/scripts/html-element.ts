@@ -21,8 +21,9 @@ export class HtmlElement {
 
   public setProperty(name: string, value: any) {
     switch (name) {
+      // Layout
       case "cornerRadius":
-        this.setStyle("border-radus", value);
+        this.setStyle("border-radius", value);
         break;
       case "clipContent":
         this.setStyle("overflow", value ? "hidden" : "auto");
@@ -30,14 +31,16 @@ export class HtmlElement {
       case "direction":
         this.setStyle("flex-direction", value);
         break;
+      // Style
       case "textColor":
         this.setStyle("color", value);
         break;
-      case "alignItems":
-        this.setStyle("align-items", value);
+      case "font":
+        this.setStyle("font-family", value);
         break;
       default:
-        this.setStyle(name, value);
+        const cssName = name.replace(/([A-Z])/g, "-$1").toLowerCase();
+        this.setStyle(cssName, value);
         break;
     }
   }
