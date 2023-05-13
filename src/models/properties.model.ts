@@ -1,5 +1,9 @@
-import { Sides } from "./html.model";
-import { Alignment, Direction, Justification } from "./property-values.model";
+import { Sides } from "./html.model.js";
+import {
+  Alignment,
+  Direction,
+  Justification,
+} from "./property-values.model.js";
 
 export interface ColorProperties {
   backgroundColor?: string;
@@ -19,8 +23,8 @@ export interface BoxProperties {
 export interface FrameProperties extends BoxProperties, ColorProperties {
   direction?: Direction;
   gap?: number;
-  justifyContent: Alignment | Justification;
-  alignItems: Alignment;
+  justifyContent?: Alignment | Justification;
+  alignItems?: Alignment;
   font?: string;
 }
 

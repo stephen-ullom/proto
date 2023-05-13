@@ -1,13 +1,13 @@
 import { readFile, readFileSync } from "fs";
 import { Server, createServer } from "http";
 import { join } from "path";
-import { Html, Sides } from "../models/html.model";
+import { Html, Sides } from "../models/html.model.js";
 import {
   FrameProperties,
   ImageProperties,
   TextProperties,
-} from "../models/properties.model";
-import { HtmlElement } from "./html-element";
+} from "../models/properties.model.js";
+import { HtmlElement } from "./html-element.js";
 
 const hostname = "localhost";
 const port = 8000;

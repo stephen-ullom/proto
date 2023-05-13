@@ -1,0 +1,5 @@
+# Source files
+src/
+
+# Development files
+.vscode/

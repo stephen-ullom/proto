@@ -4,18 +4,13 @@
   "description": "Generate UI prototypes with hyperspeed.",
   "author": "Stephen Ullom",
   "bin": {
-    "proto": "./dist/scripts/cli.js"
+    "proto": "dist/scripts/cli.js"
   },
-  "exports": {
-    ".": "./dist/index.js",
-    "./models": "./dist/models/index.js"
-  },
-  "types": [
-    "dist/index.d.ts",
-    "dist/models/index.d.ts"
-  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist/* && tsc && mkdir dist/templates && cp src/templates/* dist/templates/"
+    "build": "rm -rf dist/* && tsc && mkdir dist/templates && cp src/templates/* dist/templates/",
+    "pack": "npm run build && npm pack"
   },
   "dependencies": {
     "typescript": "^5.0.4"
