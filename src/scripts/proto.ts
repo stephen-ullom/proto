@@ -1,6 +1,5 @@
-import { readFile, readFileSync } from "fs";
-import { Server, createServer } from "http";
-import { join } from "path";
+import { readFileSync } from "fs";
+import * as http from "http";
 import { Html, Sides } from "../models/html.model.js";
 import {
   FrameProperties,
@@ -9,10 +8,7 @@ import {
 } from "../models/properties.model.js";
 import { HtmlElement } from "./html-element.js";
 
-const hostname = "localhost";
-const port = 8000;
-
-let server: Server;
+const port = 2000;
 
 export function frame(...parameters: (FrameProperties | Html)[]): string {
   const element = new HtmlElement("div");
@@ -92,19 +88,17 @@ export function repeat(
 }
 
 export function render(...content: Html[]) {
-  const templatePath = join(__dirname, "../templates/default.html");
-  readFile(templatePath, { encoding: "utf-8" }, (error, template) => {
-    const html = template.replace("{content}", content.join(""));
-    server = createServer((req, res) => {
-      res.writeHead(200, {
-        "Content-Type": "text/html",
-        "Access-Control-Allow-Origin": "*",
-      });
-      res.end(html);
+  const server = http.createServer((req, res) => {
+    res.writeHead(200, {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+      "Access-Control-Allow-Origin": "*",
     });
-    server.listen(port, hostname, () => {
-      console.log(`Server running at http://${hostname}:${port}/`);
-    });
+    res.write(`data: ${content.join("")}\n\n`);
+  });
+  server.listen(port, () => {
+    console.log(`Preview updated`);
   });
 }
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
-import * as fs from "fs";
-import * as http from "http";
 import { Server, ServerResponse } from "http";
 import * as path from "path";
 import * as ts from "typescript";
+import * as http from "http";
+import * as fs from "fs";
 
 // const args = process.argv.slice(2);
 
@@ -14,60 +14,95 @@ const projectDirectory = process.cwd();
 const srcDirectory = path.resolve(projectDirectory, "src");
 const mainPath = path.resolve(srcDirectory, fileName);
 const outputPath = path.resolve(projectDirectory, ".proto/", "main.js");
-const port = 2000;
+
+const port = 8000;
 
 let childProcess: ChildProcessWithoutNullStreams;
-let server: Server;
 let response: ServerResponse;
 
 init();
 
 function init() {
   startServer();
-  serve();
+  run();
   fs.watchFile(mainPath, { interval: 500 }, (current, previous) => {
     console.log("main.ts change");
-    serve();
+    run();
   });
 }
 
 function startServer() {
-  server = http.createServer((req, res) => {
-    res.writeHead(200, {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-      "Access-Control-Allow-Origin": "*",
+  const server = http.createServer((req, res) => {
+    const url = req.url.split("?")[0];
+    const filePath = path.join(
+      __dirname,
+      "../../public",
+      url === "/" ? "index.html" : url
+    );
+
+    console.log({ filePath });
+
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        res.writeHead(404);
+        res.end("File not found");
+      } else {
+        fs.readFile(filePath, (err, data) => {
+          if (err) {
+            res.writeHead(500);
+            res.end("Internal server error");
+          } else {
+            const ext = path.extname(filePath);
+            const contentType = getContentType(ext);
+            res.writeHead(200, { "Content-Type": contentType });
+            res.end(data);
+          }
+        });
+      }
     });
-    response = res;
-    // res.write("data: null");
-    // setInterval(() => {
-    //   // Send a message to the client every 5 seconds
-    //   res.write('data: refresh\n\n');
-    // }, 5000);
   });
+
   server.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+    console.log(`Server listening on http://localhost:${port}`);
   });
+
+  // Helper function to get the content type based on the file extension
+  function getContentType(ext) {
+    switch (ext) {
+      case ".html":
+        return "text/html";
+      case ".css":
+        return "text/css";
+      case ".js":
+        return "text/javascript";
+      case ".json":
+        return "application/json";
+      case ".png":
+        return "image/png";
+      case ".jpg":
+      case ".jpeg":
+        return "image/jpeg";
+      default:
+        return "application/octet-stream";
+    }
+  }
 }
 
-function serve() {
+function run() {
   build();
 
   if (childProcess) {
-    console.log("Restarting server...");
     childProcess.kill();
   }
 
   childProcess = spawn("node", [outputPath]);
 
   childProcess.on("spawn", (data) => {
-    console.log("spawn");
     response?.write("data: refresh\n\n");
   });
 
   childProcess.stdout.on("data", (data) => {
-    console.log(`stdout: ${data}`);
+    console.log(String(data));
   });
 
   childProcess.stderr.on("data", (data) => {
@@ -75,7 +110,7 @@ function serve() {
   });
 
   childProcess.on("close", (code) => {
-    console.log(`child process exited with code ${code}`);
+    console.log(`Preview loading...`);
   });
 }
 
@@ -124,5 +159,5 @@ function build() {
     process.exit(1);
   }
 
-  console.log("Compilation succeeded");
+  console.log("Build succeeded");
 }

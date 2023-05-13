@@ -30,6 +30,12 @@ export class HtmlElement {
       case "direction":
         this.setStyle("flex-direction", value);
         break;
+      case "textColor":
+        this.setStyle("color", value);
+        break;
+      case "alignItems":
+        this.setStyle("align-items", value);
+        break;
       default:
         this.setStyle(name, value);
         break;
