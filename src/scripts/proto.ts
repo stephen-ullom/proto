@@ -95,12 +95,11 @@ export function render(...content: Html[]) {
   const templatePath = join(__dirname, "../templates/default.html");
   readFile(templatePath, { encoding: "utf-8" }, (error, template) => {
     const html = template.replace("{content}", content.join(""));
-    if (server) {
-      console.log("Restarting server...");
-      server.close();
-    }
     server = createServer((req, res) => {
-      res.writeHead(200, { "Content-Type": "text/html" });
+      res.writeHead(200, {
+        "Content-Type": "text/html",
+        "Access-Control-Allow-Origin": "*",
+      });
       res.end(html);
     });
     server.listen(port, hostname, () => {

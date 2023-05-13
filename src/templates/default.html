@@ -14,6 +14,14 @@
         margin: 32px;
       }
     </style>
+    <script>
+      const eventSource = new EventSource("http://localhost:2000");
+      eventSource.onmessage = (event) => {
+        if (event.data === "refresh") {
+          // location.reload();
+        }
+      };
+    </script>
   </head>
   <body>
     <main>{content}</main>
