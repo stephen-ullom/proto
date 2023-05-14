@@ -1,19 +1,25 @@
-import { Sides } from "./html.js";
-import {
-  Alignment,
-  Direction,
-  Justification,
-} from "./property-values.js";
+import { Alignment, Direction, Justification } from "./property-values.js";
 
 export interface Property {
   name: string;
-  type: any;
-  on?: string;
-  off?: string;
+  type: PropertyType;
+  true?: string;
+  false?: string;
 }
 
 export interface Properties {
   [property: string]: Property;
+}
+
+export enum PropertyType {
+  String,
+  Number,
+  Pixel,
+  Boolean,
+  Edges,
+  Direction,
+  Alignment,
+  Border,
 }
 
 // export interface ColorProperties {
@@ -48,16 +54,36 @@ export interface Properties {
 //   [key: string]: any;
 // }
 
+export type Value = number | string;
+
+export interface Edges {
+  top?: Value;
+  right?: Value;
+  bottom?: Value;
+  left?: Value;
+  vertical?: Value;
+  horizontal?: Value;
+}
+
+export interface Border {
+  width?: Edges;
+  color?: Edges;
+  style?: string | Edges;
+}
+
 export interface AllProperties {
   // Layout
   width?: number;
   height?: number;
-  padding?: number | Sides;
-  margin?: number;
+  padding?: Value | Edges;
+  margin?: Value | Edges;
   fillContainer?: boolean;
   // Style
   cornerRadius?: number;
-  // borderColor?:
+  border?: {
+    width?: Value | Edges;
+    color?: Value | Edges;
+  };
   // Content
   clipContent?: boolean;
   direction?: Direction;

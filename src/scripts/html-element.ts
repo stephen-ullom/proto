@@ -1,5 +1,5 @@
 import { CssStyles, Content, HtmlAttributes } from "../models/html";
-import { Properties } from "../models/properties";
+import { Border, Edges, Properties, PropertyType } from "../models/properties";
 import { properties } from "./properties";
 
 export class HtmlElement {
@@ -24,10 +24,47 @@ export class HtmlElement {
   public setProperty(name: string, value: any): void {
     const property = properties[name];
     if (property) {
-      if (property.type === Boolean) {
-        this.setStyle(property.name, value ? property.on : property.off);
-      } else {
-        this.setStyle(property.name, value);
+      switch (property.type) {
+        case PropertyType.Boolean:
+          this.setStyle(property.name, value ? property.true : property.false);
+          break;
+        case PropertyType.Edges:
+          this.setStyle(
+            property.name,
+            typeof value === "object" ? setEdges(value, "px") : value
+          );
+          break;
+        case PropertyType.Border:
+          this.setStyle("border-style", "solid");
+          const border = value as Border;
+          if (border.width) {
+            this.setStyle(
+              "border-width",
+              typeof border.width === "object"
+                ? setEdges(border.width, "px")
+                : border.width
+            );
+          }
+          if (border.color) {
+            this.setStyle(
+              "border-color",
+              typeof border.color === "object"
+                ? setEdges(border.color)
+                : border.color
+            );
+          }
+          if (border.style) {
+            this.setStyle(
+              "border-style",
+              typeof border.style === "object"
+                ? setEdges(border.style)
+                : border.style
+            );
+          }
+          break;
+        default:
+          this.setStyle(property.name, value);
+          break;
       }
     } else {
       const cssName = name.replace(/([A-Z])/g, "-$1").toLowerCase();
@@ -68,4 +105,17 @@ export class HtmlElement {
     const content = this.children.join("");
     return `<${this.name}${attributes}>${content}</${this.name}>`;
   }
+}
+
+function setEdges(value: Edges, unit?: string): string {
+  const edges: Edges = { top: 0, right: 0, bottom: 0, left: 0 };
+  if (value.vertical) {
+    edges.top = edges.bottom = value.vertical;
+  }
+  if (value.horizontal) {
+    edges.left = edges.right = value.horizontal;
+  }
+  Object.assign(edges, value);
+  const list = [edges.top, edges.right, edges.bottom, edges.left];
+  return list.map((item) => item + unit).join(" ");
 }

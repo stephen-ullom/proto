@@ -8,6 +8,8 @@ export function layout(
 ): Content {
   const element = new HtmlElement("div");
   element.setStyle("display", "flex");
+  element.setStyle("flex-grow", "0");
+  element.setStyle("flex-shrink", "0");
   element.setProperties(properties);
   element.setChildren(children);
   return element.render();

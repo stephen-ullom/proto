@@ -1,35 +1,46 @@
-import { Properties } from "../models/properties";
-import { Direction } from "../models/property-values";
+import { Properties, PropertyType } from "../models/properties";
 
 export const properties: Properties = {
   // Layout
-  cornerRadius: {
-    name: "border-radius",
-    type: Number,
+  padding: {
+    name: "padding",
+    type: PropertyType.Edges,
+  },
+  margin: {
+    name: "margin",
+    type: PropertyType.Edges,
   },
   direction: {
     name: "flex-direction",
-    type: Direction,
+    type: PropertyType.Direction,
   },
   clipContent: {
     name: "overflow",
-    type: Boolean,
-    on: "hidden",
-    off: "visible",
+    type: PropertyType.Boolean,
+    true: "hidden",
+    false: "visible",
   },
   fillContainer: {
     name: "flex",
-    type: Boolean,
-    on: "auto",
-    off: "none",
+    type: PropertyType.Boolean,
+    true: "auto",
+    false: "none",
   },
   // Style
   font: {
     name: "font-family",
-    type: String,
+    type: PropertyType.String,
   },
   textColor: {
     name: "color",
-    type: String,
+    type: PropertyType.String,
   },
+  cornerRadius: {
+    name: "border-radius",
+    type: PropertyType.Edges,
+  },
+  border: {
+    name: "border",
+    type: PropertyType.Border
+  }
 };
