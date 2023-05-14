@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { ChildProcessWithoutNullStreams, spawn } from "child_process";
+import * as cp from "child_process";
 import * as fs from "fs";
 import * as http from "http";
 import { ServerResponse } from "http";
@@ -15,8 +15,7 @@ const outputPath = path.resolve(projectDirectory, ".proto/", "main.js");
 
 const port = 8000;
 
-let childProcess: ChildProcessWithoutNullStreams;
-let response: ServerResponse;
+let childProcess: cp.ChildProcessWithoutNullStreams;
 
 init();
 
@@ -55,7 +54,7 @@ function startServer() {
   });
 
   server.listen(port, () => {
-    console.log(`Server listening on http://localhost:${port}`);
+    // console.log(`Server listening on http://localhost:${port}`);
   });
 
   // Helper function to get the content type based on the file extension
@@ -95,8 +94,13 @@ function watchBuild() {
     ts.createSemanticDiagnosticsBuilderProgram,
     undefined,
     (diagnostic) => {
-      const watchingCode = 6194;
-      if (diagnostic.code === watchingCode) {
+      const changeDetectedCode = 6032;
+      const compileCompleteCode = 6194;
+      if (diagnostic.code === changeDetectedCode) {
+        console.log(`Changes detected...`);
+      }
+      if (diagnostic.code === compileCompleteCode) {
+        console.log(`Rebuild complete...`);
         run();
       }
     }
@@ -110,11 +114,7 @@ function run() {
     childProcess.kill();
   }
 
-  childProcess = spawn("node", [outputPath]);
-
-  childProcess.on("spawn", (data) => {
-    response?.write("data: refresh\n\n");
-  });
+  childProcess = cp.spawn("node", [outputPath]);
 
   childProcess.stdout.on("data", (data) => {
     console.log(String(data));
@@ -122,9 +122,5 @@ function run() {
 
   childProcess.stderr.on("data", (data) => {
     console.error(`stderr: ${data}`);
-  });
-
-  childProcess.on("close", (code) => {
-    console.log(`Preview loading...`);
   });
 }

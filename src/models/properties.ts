@@ -71,7 +71,7 @@ export interface AllProperties {
   font?: string;
   fontSize?: number;
   textAlign?: Alignment;
-  lineHeight?: number;
+  lineHeight?: number | string;
   // Any
   [key: string]: any;
 }

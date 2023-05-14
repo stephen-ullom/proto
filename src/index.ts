@@ -5,7 +5,7 @@ export * from "./components/include";
 export * from "./components/render";
 export * from "./components/repeat";
 export * from "./components/sides";
-export * from "./components/stack";
+export * from "./components/layout";
 export * from "./components/text";
 
 // Scripts

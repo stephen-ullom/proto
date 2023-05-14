@@ -2,7 +2,7 @@ import { Content } from "../models/html";
 import { StackProperties } from "../models/properties";
 import { HtmlElement } from "../scripts/html-element";
 
-export function stack(
+export function layout(
   properties: StackProperties,
   ...children: Content[]
 ): Content {

@@ -14,6 +14,6 @@ export function render(...content: Content[]) {
     res.write(`data: ${sanatizedContent}\n\n`);
   });
   server.listen(2000, () => {
-    console.log(`Preview updated`);
+    console.log(`Server listening on http://localhost:8000`);
   });
 }
