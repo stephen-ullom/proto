@@ -1,9 +1,9 @@
-import { Sides } from "./html.model.js";
+import { Sides } from "./html.js";
 import {
   Alignment,
   Direction,
   Justification,
-} from "./property-values.model.js";
+} from "./property-values.js";
 
 export interface Property {
   name: string;
@@ -66,17 +66,22 @@ export interface AllProperties {
   alignItems?: Alignment;
   // Color
   backgroundColor?: string;
+  // Text
   textColor?: string;
-  // Font
   font?: string;
   fontSize?: number;
   textAlign?: Alignment;
+  lineHeight?: number;
   // Any
   [key: string]: any;
 }
 
 export interface FrameProperties extends AllProperties {}
 
+export interface StackProperties extends AllProperties {}
+
 export interface TextProperties extends AllProperties {}
+
+export interface ImageProperties extends AllProperties {}
 
 export interface IncludeProperties extends AllProperties {}

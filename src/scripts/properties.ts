@@ -1,5 +1,5 @@
-import { Properties } from "../models/properties.model";
-import { Direction } from "../models/property-values.model";
+import { Properties } from "../models/properties";
+import { Direction } from "../models/property-values";
 
 export const properties: Properties = {
   // Layout

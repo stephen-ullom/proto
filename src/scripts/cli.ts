@@ -22,11 +22,7 @@ init();
 
 function init() {
   startServer();
-  run();
-  fs.watchFile(mainPath, { interval: 500 }, (current, previous) => {
-    console.log("Change detected");
-    run();
-  });
+  watchBuild();
 }
 
 function startServer() {
@@ -84,9 +80,32 @@ function startServer() {
   }
 }
 
-function run() {
-  build();
+function watchBuild() {
+  const compilierOptions = {
+    baseUrl: projectDirectory,
+    rootDir: "src",
+    outDir: ".proto",
+    resolveJsonModule: true,
+  };
 
+  const host = ts.createWatchCompilerHost(
+    [mainPath],
+    compilierOptions,
+    ts.sys,
+    ts.createSemanticDiagnosticsBuilderProgram,
+    undefined,
+    (diagnostic) => {
+      const watchingCode = 6194;
+      if (diagnostic.code === watchingCode) {
+        run();
+      }
+    }
+  );
+
+  ts.createWatchProgram(host);
+}
+
+function run() {
   if (childProcess) {
     childProcess.kill();
   }
@@ -108,53 +127,4 @@ function run() {
   childProcess.on("close", (code) => {
     console.log(`Preview loading...`);
   });
-}
-
-function build() {
-  const program = ts.createProgram({
-    rootNames: [mainPath],
-    options: {
-      baseUrl: projectDirectory,
-      rootDir: "src",
-      outDir: ".proto",
-      resolveJsonModule: true
-    },
-  });
-
-  // Check that there are files to emit
-  if (program.getSourceFiles().length === 0) {
-    console.error("No files to emit");
-    process.exit(1);
-  }
-
-  // Check for compilation errors
-  const preEmitDiagnostics = ts.getPreEmitDiagnostics(program);
-  if (preEmitDiagnostics.length > 0) {
-    const formatHost = {
-      getCanonicalFileName: (fileName) => fileName,
-      getCurrentDirectory: ts.sys.getCurrentDirectory,
-      getNewLine: () => ts.sys.newLine,
-    };
-    console.error(
-      ts.formatDiagnosticsWithColorAndContext(preEmitDiagnostics, formatHost)
-    );
-    process.exit(1);
-  }
-
-  // Emit the files
-  const emitResult = program.emit();
-  const emitDiagnostics = emitResult.diagnostics;
-  if (emitDiagnostics.length > 0) {
-    const formatHost = {
-      getCanonicalFileName: (fileName) => fileName,
-      getCurrentDirectory: ts.sys.getCurrentDirectory,
-      getNewLine: () => ts.sys.newLine,
-    };
-    console.error(
-      ts.formatDiagnosticsWithColorAndContext(emitDiagnostics, formatHost)
-    );
-    process.exit(1);
-  }
-
-  console.log("Build succeeded");
 }

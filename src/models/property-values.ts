@@ -14,3 +14,13 @@ export enum Justification {
   SpaceAround = "space-around",
   SpaceEvenly = "space-evenly",
 }
+
+export enum FontWeight {
+  Normal = "normal",
+  Bold = "bold",
+}
+
+export enum Position {
+  Relative = "relative",
+  Absolute = "absolute",
+}

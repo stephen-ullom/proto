@@ -1,10 +1,11 @@
-import { CssStyles, Html, HtmlAttributes } from "../models/html.model";
+import { CssStyles, Content, HtmlAttributes } from "../models/html";
+import { Properties } from "../models/properties";
 import { properties } from "./properties";
 
 export class HtmlElement {
   public name: string;
   public styles: CssStyles = {};
-  public children: Html[] = [];
+  public children: Content[] = [];
 
   private attributes: HtmlAttributes = {};
 
@@ -20,7 +21,7 @@ export class HtmlElement {
     }
   }
 
-  public setProperty(name: string, value: any) {
+  public setProperty(name: string, value: any): void {
     const property = properties[name];
     if (property) {
       if (property.type === Boolean) {
@@ -34,11 +35,23 @@ export class HtmlElement {
     }
   }
 
+  public setProperties(properties: Properties): void {
+    for (const [key, value] of Object.entries(properties)) {
+      this.setProperty(key, value);
+    }
+  }
+
   public setAttribute(name: string, value: string): void {
     this.attributes[name] = value;
   }
 
-  public render(): Html {
+  public setChildren(children: Content[]) {
+    for (const child of Object.values(children)) {
+      this.children.push(child);
+    }
+  }
+
+  public render(): Content {
     let styleString = "";
     for (const [key, value] of Object.entries(this.styles)) {
       styleString += `${key}:${value};`;
