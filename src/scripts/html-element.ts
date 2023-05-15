@@ -1,5 +1,10 @@
-import { CssStyles, Content, HtmlAttributes } from "../models/html";
-import { Border, Edges, Properties, PropertyType } from "../models/properties";
+import { CssStyles, Content, HtmlAttributes } from "../models/html.model";
+import {
+  Border,
+  Edges,
+  Properties,
+  PropertyType,
+} from "../models/properties.model";
 import { properties } from "./properties";
 
 export class HtmlElement {
@@ -21,60 +26,9 @@ export class HtmlElement {
     }
   }
 
-  public setProperty(name: string, value: any): void {
-    const property = properties[name];
-    if (property) {
-      switch (property.type) {
-        case PropertyType.Boolean:
-          this.setStyle(property.name, value ? property.true : property.false);
-          break;
-        case PropertyType.Edges:
-          this.setStyle(
-            property.name,
-            typeof value === "object" ? setEdges(value, "px") : value
-          );
-          break;
-        case PropertyType.Border:
-          this.setStyle("border-style", "solid");
-          const border = value as Border;
-          if (border.width) {
-            this.setStyle(
-              "border-width",
-              typeof border.width === "object"
-                ? setEdges(border.width, "px")
-                : border.width
-            );
-          }
-          if (border.color) {
-            this.setStyle(
-              "border-color",
-              typeof border.color === "object"
-                ? setEdges(border.color)
-                : border.color
-            );
-          }
-          if (border.style) {
-            this.setStyle(
-              "border-style",
-              typeof border.style === "object"
-                ? setEdges(border.style)
-                : border.style
-            );
-          }
-          break;
-        default:
-          this.setStyle(property.name, value);
-          break;
-      }
-    } else {
-      const cssName = name.replace(/([A-Z])/g, "-$1").toLowerCase();
-      this.setStyle(cssName, value);
-    }
-  }
-
   public setProperties(properties: Properties): void {
     for (const [key, value] of Object.entries(properties)) {
-      this.setProperty(key, value);
+      setProperty(this, key, value);
     }
   }
 
@@ -118,4 +72,77 @@ function setEdges(value: Edges, unit?: string): string {
   Object.assign(edges, value);
   const list = [edges.top, edges.right, edges.bottom, edges.left];
   return list.map((item) => item + unit).join(" ");
+}
+
+function setProperty(element: HtmlElement, name: string, value: any): void {
+  const property = properties[name];
+  if (property) {
+    switch (property.type) {
+      case PropertyType.Boolean:
+        element.setStyle(property.name, value ? property.true : property.false);
+        break;
+      case PropertyType.Edges:
+        element.setStyle(
+          property.name,
+          typeof value === "object" ? setEdges(value, "px") : value
+        );
+        break;
+      case PropertyType.Border:
+        element.setStyle("border-style", "solid");
+        const border = value as Border;
+        if (border.width) {
+          element.setStyle(
+            "border-width",
+            typeof border.width === "object"
+              ? setEdges(border.width, "px")
+              : border.width
+          );
+        }
+        if (border.color) {
+          element.setStyle(
+            "border-color",
+            typeof border.color === "object"
+              ? setEdges(border.color)
+              : border.color
+          );
+        }
+        if (border.style) {
+          element.setStyle(
+            "border-style",
+            typeof border.style === "object"
+              ? setEdges(border.style)
+              : border.style
+          );
+        }
+        break;
+      case PropertyType.Position:
+        element.setStyle("position", "absolute");
+        const position = value as Edges;
+        if (position.vertical !== undefined) {
+          position.top = position.bottom = position.vertical;
+        }
+        if (position.horizontal !== undefined) {
+          position.left = position.right = position.horizontal;
+        }
+        if (position.top !== undefined) {
+          element.setStyle("top", position.top);
+        }
+        if (position.right !== undefined) {
+          element.setStyle("right", position.right);
+        }
+        if (position.bottom !== undefined) {
+          element.setStyle("bottom", position.bottom);
+        }
+        if (position.left !== undefined) {
+          element.setStyle("left", position.left);
+        }
+        break;
+      default:
+        element.setStyle(property.name, value);
+        break;
+    }
+  } else {
+    const cssName = name.replace(/([A-Z])/g, "-$1").toLowerCase();
+    element.setStyle(cssName, value);
+  }
 }

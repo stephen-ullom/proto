@@ -1,5 +1,5 @@
-import { Content } from "../models/html";
-import { FrameProperties } from "../models/properties";
+import { Content } from "../models/html.model";
+import { FrameProperties } from "../models/properties.model";
 import { HtmlElement } from "../scripts/html-element";
 
 export function frame(

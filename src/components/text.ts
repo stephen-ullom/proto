@@ -1,5 +1,5 @@
-import { Content } from "../models/html";
-import { TextProperties } from "../models/properties";
+import { Content } from "../models/html.model";
+import { TextProperties } from "../models/properties.model";
 import { HtmlElement } from "../scripts/html-element";
 
 export function text(

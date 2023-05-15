@@ -1,5 +1,5 @@
-import { Content } from "../models/html";
-import { ImageProperties } from "../models/properties";
+import { Content } from "../models/html.model";
+import { ImageProperties } from "../models/properties.model";
 import { HtmlElement } from "../scripts/html-element";
 
 export function image(properties: ImageProperties, source: string): Content {

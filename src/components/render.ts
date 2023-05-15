@@ -1,6 +1,6 @@
 import * as http from "http";
 
-import { Content } from "../models/html";
+import { Content } from "../models/html.model";
 
 export function render(...content: Content[]) {
   const server = http.createServer((req, res) => {

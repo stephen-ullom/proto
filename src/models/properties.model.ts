@@ -1,7 +1,11 @@
-import { Alignment, Direction, Justification } from "./property-values.js";
+import {
+  Alignment,
+  Direction,
+  Justification,
+} from "./property-values.model.js";
 
 export interface Property {
-  name: string;
+  name?: string;
   type: PropertyType;
   true?: string;
   false?: string;
@@ -20,39 +24,8 @@ export enum PropertyType {
   Direction,
   Alignment,
   Border,
+  Position,
 }
-
-// export interface ColorProperties {
-//   backgroundColor?: string;
-//   textColor?: string;
-// }
-
-// export interface BoxProperties {
-//   width?: number;
-//   height?: number;
-//   clipContent?: boolean;
-//   fillContainer?: boolean;
-// }
-
-// export interface FrameProperties extends BoxProperties, ColorProperties {
-//   direction?: Direction;
-//   gap?: number;
-//   justifyContent?: Alignment | Justification;
-//   alignItems?: Alignment;
-//   cornerRadius?: number;
-//   margin?: number;
-//   padding?: number | Sides;
-// }
-
-// export interface TextProperties {
-//   font?: string;
-//   fontSize?: number;
-//   textAlign?: Alignment;
-// }
-
-// export interface ImageProperties {
-//   [key: string]: any;
-// }
 
 export type Value = number | string;
 
@@ -78,6 +51,7 @@ export interface AllProperties {
   padding?: Value | Edges;
   margin?: Value | Edges;
   fillContainer?: boolean;
+  position?: Edges;
   // Style
   cornerRadius?: number;
   border?: {
@@ -111,3 +85,35 @@ export interface TextProperties extends AllProperties {}
 export interface ImageProperties extends AllProperties {}
 
 export interface IncludeProperties extends AllProperties {}
+
+// export interface ColorProperties {
+//   backgroundColor?: string;
+//   textColor?: string;
+// }
+
+// export interface BoxProperties {
+//   width?: number;
+//   height?: number;
+//   clipContent?: boolean;
+//   fillContainer?: boolean;
+// }
+
+// export interface FrameProperties extends BoxProperties, ColorProperties {
+//   direction?: Direction;
+//   gap?: number;
+//   justifyContent?: Alignment | Justification;
+//   alignItems?: Alignment;
+//   cornerRadius?: number;
+//   margin?: number;
+//   padding?: number | Sides;
+// }
+
+// export interface TextProperties {
+//   font?: string;
+//   fontSize?: number;
+//   textAlign?: Alignment;
+// }
+
+// export interface ImageProperties {
+//   [key: string]: any;
+// }

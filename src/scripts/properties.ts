@@ -1,4 +1,4 @@
-import { Properties, PropertyType } from "../models/properties";
+import { Properties, PropertyType } from "../models/properties.model";
 
 export const properties: Properties = {
   // Layout
@@ -9,6 +9,9 @@ export const properties: Properties = {
   margin: {
     name: "margin",
     type: PropertyType.Edges,
+  },
+  position: {
+    type: PropertyType.Position,
   },
   direction: {
     name: "flex-direction",
@@ -40,7 +43,6 @@ export const properties: Properties = {
     type: PropertyType.Edges,
   },
   border: {
-    name: "border",
-    type: PropertyType.Border
-  }
+    type: PropertyType.Border,
+  },
 };

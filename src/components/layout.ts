@@ -1,5 +1,5 @@
-import { Content } from "../models/html";
-import { StackProperties } from "../models/properties";
+import { Content } from "../models/html.model";
+import { StackProperties } from "../models/properties.model";
 import { HtmlElement } from "../scripts/html-element";
 
 export function layout(
