@@ -1,12 +1,15 @@
-const eventSource = new EventSource("http://localhost:2000");
+function connect() {
+  const socket = new WebSocket("ws://localhost:2000");
 
-eventSource.onmessage = (event) => {
-  console.log("Preview updated.");
-  const html = event.data;
-  const mainElement = document.getElementById("proto");
-  if (mainElement) mainElement.innerHTML = html;
-};
+  socket.addEventListener("message", (event) => {
+    const mainElement = document.getElementById("proto");
+    if (mainElement) mainElement.innerHTML = event.data;
+    socket.send("Preview updated.");
+  });
 
-eventSource.onerror = (error) => {
-  console.log("Loading preview...");
-};
+  socket.addEventListener("close", () => {
+    setTimeout(connect, 100);
+  });
+}
+
+connect();

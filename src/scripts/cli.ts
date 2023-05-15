@@ -3,7 +3,6 @@
 import * as cp from "child_process";
 import * as fs from "fs";
 import * as http from "http";
-import { ServerResponse } from "http";
 import * as path from "path";
 import * as ts from "typescript";
 
@@ -15,13 +14,18 @@ const outputPath = path.resolve(projectDirectory, ".proto/", "main.js");
 
 const port = 8000;
 
+const jsPath = path.resolve(srcDirectory, "main.js");
+
+let timeoutId: NodeJS.Timeout;
 let childProcess: cp.ChildProcessWithoutNullStreams;
 
 init();
 
 function init() {
   startServer();
-  watchBuild();
+  // watchBuild();
+  run(jsPath);
+  watchJS();
 }
 
 function startServer() {
@@ -54,10 +58,9 @@ function startServer() {
   });
 
   server.listen(port, () => {
-    // console.log(`Server listening on http://localhost:${port}`);
+    console.log(`Server listening on http://localhost:${port}`);
   });
 
-  // Helper function to get the content type based on the file extension
   function getContentType(ext) {
     switch (ext) {
       case ".html":
@@ -101,7 +104,7 @@ function watchBuild() {
       }
       if (diagnostic.code === compileCompleteCode) {
         console.log(`Rebuild complete...`);
-        run();
+        run(outputPath);
       }
     }
   );
@@ -109,12 +112,20 @@ function watchBuild() {
   ts.createWatchProgram(host);
 }
 
-function run() {
+function watchJS() {
+  fs.watch(srcDirectory, { recursive: true }, (eventType, filename) => {
+    if (filename) {
+      debounce(handleChanges, 100);
+    }
+  });
+}
+
+function run(path: string) {
   if (childProcess) {
     childProcess.kill();
   }
 
-  childProcess = cp.spawn("node", [outputPath]);
+  childProcess = cp.spawn("node", [path]);
 
   childProcess.stdout.on("data", (data) => {
     console.log(String(data));
@@ -123,4 +134,14 @@ function run() {
   childProcess.stderr.on("data", (data) => {
     console.error(`stderr: ${data}`);
   });
+}
+
+function handleChanges() {
+  console.log("Change detected...");
+  run(jsPath);
+}
+
+function debounce(func, delay) {
+  clearTimeout(timeoutId);
+  timeoutId = setTimeout(func, delay);
 }

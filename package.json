@@ -13,7 +13,8 @@
     "pack": "npm run build && npm pack"
   },
   "dependencies": {
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "@types/node": "^20.1.0"
