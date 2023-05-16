@@ -24,7 +24,7 @@ export enum PropertyType {
   Direction,
   Alignment,
   Border,
-  Position,
+  Constraint,
 }
 
 export type Value = number | string;

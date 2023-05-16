@@ -14,7 +14,7 @@ body {
   display: flex;
   flex-direction: row;
   width: fit-content;
-  gap: 32px;
-  padding: 32px;
+  gap: 64px;
+  padding: 48px;
   -webkit-font-smoothing: antialiased;
 }

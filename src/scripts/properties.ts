@@ -10,8 +10,8 @@ export const properties: Properties = {
     name: "margin",
     type: PropertyType.Edges,
   },
-  position: {
-    type: PropertyType.Position,
+  constraint: {
+    type: PropertyType.Constraint,
   },
   direction: {
     name: "flex-direction",

@@ -115,7 +115,7 @@ function setProperty(element: HtmlElement, name: string, value: any): void {
           );
         }
         break;
-      case PropertyType.Position:
+      case PropertyType.Constraint:
         element.setStyle("position", "absolute");
         const position = value as Edges;
         if (position.vertical !== undefined) {
