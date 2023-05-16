@@ -61,7 +61,7 @@ export class HtmlElement {
   }
 }
 
-function setEdges(value: Edges, unit?: string): string {
+function setEdges(value: Edges, unit: string = ""): string {
   const edges: Edges = { top: 0, right: 0, bottom: 0, left: 0 };
   if (value.vertical) {
     edges.top = edges.bottom = value.vertical;
@@ -71,7 +71,9 @@ function setEdges(value: Edges, unit?: string): string {
   }
   Object.assign(edges, value);
   const list = [edges.top, edges.right, edges.bottom, edges.left];
-  return list.map((item) => item + unit).join(" ");
+  return list
+    .map((item) => (Number.isInteger(item) ? item + unit : item))
+    .join(" ");
 }
 
 function setProperty(element: HtmlElement, name: string, value: any): void {
