@@ -1,0 +1,20 @@
+body {
+  background: gray;
+  margin: 0;
+  overflow: scroll;
+}
+
+#controls {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+}
+
+#proto {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  gap: 32px;
+  padding: 32px;
+  -webkit-font-smoothing: antialiased;
+}

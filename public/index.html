@@ -2,23 +2,15 @@
 <html lang="en">
   <head>
     <title>Proto</title>
-    <style>
-      body {
-        background: gray;
-        margin: 0;
-        overflow: scroll;
-      }
-      #proto {
-        display: flex;
-        flex-direction: row;
-        width: fit-content;
-        gap: 32px;
-        padding: 32px;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="init()">
     <main id="proto"></main>
+    <div id="controls">
+      <button onclick="zoomOut()">Zoom Out</button>
+      <button onclick="resetZoom()">Reset</button>
+      <button onclick="zoomIn()">Zoom In</button>
+    </div>
   </body>
 </html>

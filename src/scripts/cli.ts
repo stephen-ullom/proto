@@ -23,9 +23,8 @@ init();
 
 function init() {
   startServer();
-  // watchBuild();
-  run(jsPath);
-  watchJS();
+  // watchTs();
+  watchJs();
 }
 
 function startServer() {
@@ -82,7 +81,7 @@ function startServer() {
   }
 }
 
-function watchBuild() {
+function watchTs() {
   const compilierOptions = {
     baseUrl: projectDirectory,
     rootDir: "src",
@@ -112,10 +111,14 @@ function watchBuild() {
   ts.createWatchProgram(host);
 }
 
-function watchJS() {
+function watchJs() {
+  run(jsPath);
   fs.watch(srcDirectory, { recursive: true }, (eventType, filename) => {
     if (filename) {
-      debounce(handleChanges, 100);
+      debounce(() => {
+        console.log("Change detected...");
+        run(jsPath);
+      }, 100);
     }
   });
 }
@@ -134,11 +137,6 @@ function run(path: string) {
   childProcess.stderr.on("data", (data) => {
     console.error(`stderr: ${data}`);
   });
-}
-
-function handleChanges() {
-  console.log("Change detected...");
-  run(jsPath);
 }
 
 function debounce(func, delay) {
