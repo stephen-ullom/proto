@@ -4,28 +4,17 @@ import * as cp from "child_process";
 import * as fs from "fs";
 import * as http from "http";
 import * as path from "path";
-import * as ts from "typescript";
 
-const fileName = "main.ts";
 const projectDirectory = process.cwd();
-const srcDirectory = path.resolve(projectDirectory, "src");
-const mainPath = path.resolve(srcDirectory, fileName);
-const outputPath = path.resolve(projectDirectory, ".proto/", "main.js");
-
+const packageJsonPath = path.resolve(projectDirectory, "package.json");
+const packageJson = require(packageJsonPath);
 const port = 8000;
-
-const jsPath = path.resolve(srcDirectory, "main.js");
 
 let timeoutId: NodeJS.Timeout;
 let childProcess: cp.ChildProcessWithoutNullStreams;
 
-init();
-
-function init() {
-  startServer();
-  // watchTs();
-  watchJs();
-}
+startServer();
+watchProject();
 
 function startServer() {
   const server = http.createServer((req, res) => {
@@ -81,61 +70,26 @@ function startServer() {
   }
 }
 
-function watchTs() {
-  const compilierOptions = {
-    baseUrl: projectDirectory,
-    rootDir: "src",
-    outDir: ".proto",
-    resolveJsonModule: true,
-  };
-
-  const host = ts.createWatchCompilerHost(
-    [mainPath],
-    compilierOptions,
-    ts.sys,
-    ts.createSemanticDiagnosticsBuilderProgram,
-    undefined,
-    (diagnostic) => {
-      const changeDetectedCode = 6032;
-      const compileCompleteCode = 6194;
-      if (diagnostic.code === changeDetectedCode) {
-        console.log(`Changes detected...`);
-      }
-      if (diagnostic.code === compileCompleteCode) {
-        console.log(`Rebuild complete...`);
-        run(outputPath);
-      }
-    }
-  );
-
-  ts.createWatchProgram(host);
-}
-
-function watchJs() {
-  run(jsPath);
-  fs.watch(srcDirectory, { recursive: true }, (eventType, filename) => {
+function watchProject() {
+  run();
+  fs.watch(projectDirectory, { recursive: true }, (eventType, filename) => {
     if (filename) {
       debounce(() => {
         console.log("Change detected...");
-        run(jsPath);
+        run();
       }, 100);
     }
   });
 }
 
-function run(path: string) {
+function run() {
   if (childProcess) {
     childProcess.kill();
   }
 
-  childProcess = cp.spawn("node", [path]);
-
-  childProcess.stdout.on("data", (data) => {
-    console.log(String(data));
-  });
-
-  childProcess.stderr.on("data", (data) => {
-    console.error(`stderr: ${data}`);
+  childProcess = cp.spawn("node", [packageJson.main], {
+    stdio: "inherit",
+    cwd: projectDirectory,
   });
 }
 
