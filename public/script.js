@@ -7,7 +7,7 @@ let initialMouseY = 0;
 let initialContainerX = 0;
 let initialContainerY = 0;
 let grabbing = false;
-let spacebarPressed = false;
+let commandPressed = false;
 
 function init() {
   connect();
@@ -15,13 +15,39 @@ function init() {
   container = document.getElementById("container");
   content = document.getElementById("content");
 
-  document.addEventListener("keydown", keydown);
-  document.addEventListener("keyup", keyup);
+  document.addEventListener("keydown", keyDown);
+  document.addEventListener("keyup", keyUp);
 
   if (container) {
     container.addEventListener("mousedown", startDragging);
     container.addEventListener("mousemove", drag);
     container.addEventListener("mouseup", stopDragging);
+  }
+}
+
+function keyDown(event) {
+  switch (event.key) {
+    case "Meta":
+      commandPressed = true;
+      break;
+    case "0":
+      if (commandPressed) {
+        zoomFit();
+      }
+      break;
+    case "1":
+      if (commandPressed) {
+        zoomReset();
+      }
+      break;
+  }
+}
+
+function keyUp(event) {
+  switch (event.key) {
+    case "Meta":
+      commandPressed = true;
+      break;
   }
 }
 
@@ -52,49 +78,49 @@ function zoomFit() {
   content.style.top = "0px";
 }
 
-function zoomTo(element) {
-  const containerRect = container.getBoundingClientRect();
-  const elementRect = element.getBoundingClientRect();
-  zoomLevel = containerRect.height / elementRect.height;
-  content.style.zoom = zoomLevel;
-  content.style.left = `-${element.offsetLeft}px`;
-  content.style.top = `-${element.offsetTop}px`;
-}
+function zoomTo(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    const containerRect = container.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+    zoomLevel = containerRect.height / elementRect.height;
+    content.style.zoom = zoomLevel - 0.2;
+    // content.style.zoom = 1;
 
-function zoomIn() {
-  zoomLevel += 0.1;
-  content.style.zoom = zoomLevel;
-}
+    const centerScreenX = container.offsetWidth / 2;
+    const centerScreenY = container.offsetHeight / 2;
+    const centerElementX = element.offsetWidth / 2;
+    const centerElementY = element.offsetHeight / 2;
 
-function zoomOut() {
-  zoomLevel -= 0.1;
-  content.style.zoom = zoomLevel;
-}
+    const leftOffset = centerScreenX - element.offsetLeft - centerElementX;
+    const topOffset = centerScreenY - element.offsetTop - centerElementY;
 
-function keydown(event) {
-  if (event.key === " ") {
-    event.preventDefault();
-    spacebarPressed = true;
-    setCursor();
+    content.style.left = `${leftOffset}px`;
+    content.style.top = `${topOffset}px`;
   }
 }
 
-function keyup(event) {
-  if (event.key === " ") {
-    spacebarPressed = false;
-    setCursor();
+function zoomIn() {
+  if (zoomLevel < 5) {
+    zoomLevel += 0.1;
+    content.style.zoom = zoomLevel;
+  }
+}
+
+function zoomOut() {
+  if (zoomLevel > 0.1) {
+    zoomLevel -= 0.1;
+    content.style.zoom = zoomLevel;
   }
 }
 
 function startDragging(event) {
-  if (spacebarPressed) {
-    grabbing = true;
-    setCursor();
-    initialMouseX = event.clientX;
-    initialMouseY = event.clientY;
-    initialContainerX = content.offsetLeft * zoomLevel;
-    initialContainerY = content.offsetTop * zoomLevel;
-  }
+  grabbing = true;
+  setCursor();
+  initialMouseX = event.clientX;
+  initialMouseY = event.clientY;
+  initialContainerX = content.offsetLeft * zoomLevel;
+  initialContainerY = content.offsetTop * zoomLevel;
 }
 
 function drag(event) {
@@ -117,9 +143,7 @@ function stopDragging() {
 function setCursor() {
   if (grabbing) {
     container.style.cursor = "grabbing";
-  } else if (spacebarPressed) {
-    container.style.cursor = "grab";
   } else {
-    container.style.cursor = "default";
+    container.style.cursor = "grab";
   }
 }

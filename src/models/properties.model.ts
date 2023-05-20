@@ -88,6 +88,10 @@ export interface AllProperties {
   [key: string]: any;
 }
 
+export interface BoardProperties {
+  name: string;
+}
+
 export interface FrameProperties extends AllProperties {}
 
 export interface StackProperties extends AllProperties {}
