@@ -8,9 +8,9 @@ export * from "./components/include";
 export * from "./components/repeat";
 
 // Scripts
-export * from "./scripts/html-element.js";
+export * from "./scripts/html-element";
 
 // Models
-export * from "./models/html.model.js";
-export * from "./models/properties.model.js";
-export * from "./models/property-values.model.js";
+export * from "./models/html.model";
+export * from "./models/properties.model";
+export * from "./models/property-values.model";

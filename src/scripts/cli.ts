@@ -16,7 +16,7 @@ let childProcess: cp.ChildProcessWithoutNullStreams;
 startServer();
 watchProject();
 
-function startServer() {
+function startServer(): void {
   const server = http.createServer((req, res) => {
     const url = req.url.split("?")[0];
     const filePath = path.join(
@@ -49,8 +49,8 @@ function startServer() {
     console.log(`Server listening on http://localhost:${port}`);
   });
 
-  function getContentType(ext) {
-    switch (ext) {
+  function getContentType(ext: string): string {
+    switch (ext.toLowerCase()) {
       case ".html":
         return "text/html";
       case ".css":
@@ -70,7 +70,7 @@ function startServer() {
   }
 }
 
-function watchProject() {
+function watchProject(): void {
   run();
   fs.watch(projectDirectory, { recursive: true }, (eventType, filename) => {
     if (filename) {
@@ -82,7 +82,7 @@ function watchProject() {
   });
 }
 
-function run() {
+function run(): void {
   if (childProcess) {
     childProcess.kill();
   }
@@ -93,7 +93,7 @@ function run() {
   });
 }
 
-function debounce(func, delay) {
+function debounce(func, delay): void {
   clearTimeout(timeoutId);
   timeoutId = setTimeout(func, delay);
 }

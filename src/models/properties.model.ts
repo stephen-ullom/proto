@@ -50,8 +50,8 @@ export interface AllProperties {
   height?: number;
   padding?: Value | Edges;
   margin?: Value | Edges;
+  constraint?: Edges;
   fillContainer?: boolean;
-  position?: Edges;
   // Style
   cornerRadius?: number;
   border?: {
