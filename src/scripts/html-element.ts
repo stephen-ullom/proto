@@ -1,6 +1,7 @@
 import { CssStyles, Content, HtmlAttributes } from "../models/html.model";
 import {
   Border,
+  Corners,
   Edges,
   Properties,
   PropertyType,
@@ -61,8 +62,9 @@ export class HtmlElement {
   }
 }
 
-function setEdges(value: Edges, unit: string = ""): string {
+function setEdges(value: Edges, unit = ""): string {
   const edges: Edges = { top: 0, right: 0, bottom: 0, left: 0 };
+
   if (value.vertical) {
     edges.top = edges.bottom = value.vertical;
   }
@@ -70,9 +72,43 @@ function setEdges(value: Edges, unit: string = ""): string {
     edges.left = edges.right = value.horizontal;
   }
   Object.assign(edges, value);
-  const list = [edges.top, edges.right, edges.bottom, edges.left];
-  return list
+
+  const edgeList = [edges.top, edges.right, edges.bottom, edges.left];
+  return edgeList
     .map((item) => (Number.isInteger(item) ? item + unit : item))
+    .join(" ");
+}
+
+function setCorners(value: Corners, unit = "") {
+  const corners: Corners = {
+    topLeft: 0,
+    topRight: 0,
+    bottomRight: 0,
+    bottomLeft: 0,
+  };
+
+  if (value.top !== undefined) {
+    corners.topLeft = corners.topRight = value.top;
+  }
+  if (value.right !== undefined) {
+    corners.topRight = corners.bottomRight = value.right;
+  }
+  if (value.bottom !== undefined) {
+    corners.bottomLeft = corners.bottomRight = value.bottom;
+  }
+  if (value.left !== undefined) {
+    corners.topLeft = corners.bottomLeft = value.left;
+  }
+  Object.assign(corners, value);
+ 
+  const cornerList = [
+    corners.topLeft,
+    corners.topRight,
+    corners.bottomRight,
+    corners.bottomLeft,
+  ];
+  return cornerList
+    .map((corner) => (Number.isInteger(corner) ? corner + unit : corner))
     .join(" ");
 }
 
@@ -116,6 +152,12 @@ function setProperty(element: HtmlElement, name: string, value: any): void {
               : border.style
           );
         }
+        break;
+      case PropertyType.Corners:
+        element.setStyle(
+          property.name,
+          typeof value === "object" ? setCorners(value, "px") : value
+        );
         break;
       case PropertyType.Constraint:
         element.setStyle("position", "absolute");

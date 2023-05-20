@@ -40,7 +40,7 @@ export const properties: Properties = {
   },
   cornerRadius: {
     name: "border-radius",
-    type: PropertyType.Edges,
+    type: PropertyType.Corners,
   },
   border: {
     type: PropertyType.Border,

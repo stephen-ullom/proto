@@ -21,6 +21,7 @@ export enum PropertyType {
   Pixel,
   Boolean,
   Edges,
+  Corners,
   Direction,
   Alignment,
   Border,
@@ -38,6 +39,17 @@ export interface Edges {
   horizontal?: Value;
 }
 
+export interface Corners {
+  top?: Value;
+  right?: Value;
+  bottom?: Value;
+  left?: Value;
+  topLeft?: Value;
+  topRight?: Value;
+  bottomLeft?: Value;
+  bottomRight?: Value;
+}
+
 export interface Border {
   width?: Edges;
   color?: Edges;
@@ -53,7 +65,7 @@ export interface AllProperties {
   constraint?: Edges;
   fillContainer?: boolean;
   // Style
-  cornerRadius?: number;
+  cornerRadius?: Value | Corners;
   border?: {
     width?: Value | Edges;
     color?: Value | Edges;
