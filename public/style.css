@@ -1,7 +1,7 @@
 body {
   background: #202020;
   margin: 0;
-  overflow: scroll;
+  -webkit-font-smoothing: antialiased;
 }
 
 #controls {
@@ -10,11 +10,15 @@ body {
   right: 10px;
 }
 
-#proto {
-  display: flex;
-  flex-direction: row;
-  width: fit-content;
-  gap: 64px;
-  padding: 48px;
-  -webkit-font-smoothing: antialiased;
+#draggable-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+#content {
+  position: absolute;
 }
