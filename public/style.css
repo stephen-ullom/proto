@@ -10,7 +10,7 @@ body {
   right: 10px;
 }
 
-#draggable-container {
+#container {
   position: absolute;
   top: 0;
   right: 0;

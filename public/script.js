@@ -11,7 +11,8 @@ let spacebarPressed = false;
 
 function init() {
   connect();
-  container = document.getElementById("draggable-container");
+
+  container = document.getElementById("container");
   content = document.getElementById("content");
 
   document.addEventListener("keydown", keydown);
@@ -37,19 +38,37 @@ function connect() {
   });
 }
 
-function resetZoom() {
+function zoomReset() {
   zoomLevel = 1;
-  container.style.zoom = zoomLevel;
+  content.style.zoom = zoomLevel;
+}
+
+function zoomFit() {
+  const containerRect = container.getBoundingClientRect();
+  const contentRect = content.getBoundingClientRect();
+  zoomLevel = containerRect.height / contentRect.height;
+  content.style.zoom = zoomLevel;
+  content.style.left = "0px";
+  content.style.top = "0px";
+}
+
+function zoomTo(element) {
+  const containerRect = container.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+  zoomLevel = containerRect.height / elementRect.height;
+  content.style.zoom = zoomLevel;
+  content.style.left = `-${element.offsetLeft}px`;
+  content.style.top = `-${element.offsetTop}px`;
 }
 
 function zoomIn() {
   zoomLevel += 0.1;
-  container.style.zoom = zoomLevel;
+  content.style.zoom = zoomLevel;
 }
 
 function zoomOut() {
   zoomLevel -= 0.1;
-  container.style.zoom = zoomLevel;
+  content.style.zoom = zoomLevel;
 }
 
 function keydown(event) {
