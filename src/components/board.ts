@@ -17,6 +17,7 @@ export function board(
 
   const element = new HtmlElement("section");
   element.setStyle("position", "relative");
+  element.setStyle("padding", "50px");
   element.setAttribute("id", boardId);
   element.setChildren([text.render(), ...children]);
   return element.render();

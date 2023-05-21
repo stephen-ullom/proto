@@ -1,6 +1,9 @@
 let container;
 let content;
-let zoomLevel = 1;
+
+let contentScale = 1;
+let contentX = 0;
+let contentY = 0;
 
 let initialMouseX = 0;
 let initialMouseY = 0;
@@ -65,53 +68,74 @@ function connect() {
 }
 
 function zoomReset() {
-  zoomLevel = 1;
-  content.style.zoom = zoomLevel;
+  setScale(1);
 }
 
 function zoomFit() {
   const containerRect = container.getBoundingClientRect();
   const contentRect = content.getBoundingClientRect();
-  zoomLevel = containerRect.height / contentRect.height;
-  content.style.zoom = zoomLevel;
-  content.style.left = "0px";
-  content.style.top = "0px";
+
+  const scale = containerRect.height / contentRect.height;
+  setScale(scale);
+
+  const centerContainerX = container.offsetWidth / 2;
+  const centerContainerY = container.offsetHeight / 2;
+
+  const centerContentX = contentRect.width / 2;
+  const centerContentY = contentRect.height / 2;
+
+  const multiplyer = 1 / scale;
+  const leftOffset = centerContainerX * multiplyer - centerContentX;
+  const topOffset = centerContainerY * multiplyer - centerContentY;
+
+  setPosition(leftOffset, topOffset);
 }
 
 function zoomTo(elementId) {
   const element = document.getElementById(elementId);
   if (element) {
     const containerRect = container.getBoundingClientRect();
+    const contentRect = content.getBoundingClientRect();
     const elementRect = element.getBoundingClientRect();
-    zoomLevel = containerRect.height / elementRect.height;
-    content.style.zoom = zoomLevel - 0.2;
-    // content.style.zoom = 1;
 
-    const centerScreenX = container.offsetWidth / 2;
-    const centerScreenY = container.offsetHeight / 2;
-    const centerElementX = element.offsetWidth / 2;
-    const centerElementY = element.offsetHeight / 2;
+    const scale = containerRect.height / elementRect.height;
+    setScale(scale);
 
-    const leftOffset = centerScreenX - element.offsetLeft - centerElementX;
-    const topOffset = centerScreenY - element.offsetTop - centerElementY;
+    const containerCenterX = container.offsetWidth / 2;
+    const containerCenterY = container.offsetHeight / 2;
 
-    content.style.left = `${leftOffset}px`;
-    content.style.top = `${topOffset}px`;
+    const elementX = element.offsetLeft;
+    const elementY = element.offsetTop;
+
+    const elementCenterX = elementRect.width / 2;
+    const elementCenterY = elementRect.height / 2;
+
+    const multiplyer = 1 / scale;
+    const leftOffset = containerCenterX * multiplyer - elementX - elementCenterX;
+    const topOffset = containerCenterY * multiplyer - elementY - elementCenterY;
+
+    setPosition(leftOffset, topOffset);
   }
 }
 
 function zoomIn() {
-  if (zoomLevel < 5) {
-    zoomLevel += 0.1;
-    content.style.zoom = zoomLevel;
-  }
+  setScale(contentScale + 0.1);
 }
 
 function zoomOut() {
-  if (zoomLevel > 0.1) {
-    zoomLevel -= 0.1;
-    content.style.zoom = zoomLevel;
+  setScale(contentScale - 0.1);
+}
+
+function setScale(zoom) {
+  if (zoom > 0.1 && zoom < 5) {
+    contentScale = zoom;
+    content.style.zoom = contentScale;
   }
+}
+
+function setPosition(left, top) {
+  content.style.left = `${left}px`;
+  content.style.top = `${top}px`;
 }
 
 function startDragging(event) {
@@ -119,20 +143,21 @@ function startDragging(event) {
   setCursor();
   initialMouseX = event.clientX;
   initialMouseY = event.clientY;
-  initialContainerX = content.offsetLeft * zoomLevel;
-  initialContainerY = content.offsetTop * zoomLevel;
+  initialContainerX = content.offsetLeft * contentScale;
+  initialContainerY = content.offsetTop * contentScale;
 }
 
 function drag(event) {
   if (!grabbing) return;
   event.preventDefault();
+
   const offsetX = event.clientX - initialMouseX;
   const offsetY = event.clientY - initialMouseY;
+
   const left = initialContainerX + offsetX;
   const top = initialContainerY + offsetY;
-  const multiplyer = 1 / zoomLevel;
-  content.style.left = `${left * multiplyer}px`;
-  content.style.top = `${top * multiplyer}px`;
+  const multiplyer = 1 / contentScale;
+  setPosition(left * multiplyer, top * multiplyer);
 }
 
 function stopDragging() {

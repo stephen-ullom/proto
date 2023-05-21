@@ -8,8 +8,9 @@ body {
 
 h1 {
   margin: 0;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 
+  text-align: center;
   font-size: medium;
   cursor: pointer;
   color: white;
