@@ -7,9 +7,10 @@ let contentY = 0;
 
 let initialMouseX = 0;
 let initialMouseY = 0;
-let initialContainerX = 0;
-let initialContainerY = 0;
-let grabbing = false;
+let initialContentX = 0;
+let initialContentY = 0;
+
+let isGrabbing = false;
 let commandPressed = false;
 
 function init() {
@@ -68,105 +69,135 @@ function connect() {
 }
 
 function zoomReset() {
+  contentX = 0;
+  contentY = 0;
   setScale(1);
 }
 
 function zoomFit() {
-  const containerRect = container.getBoundingClientRect();
-  const contentRect = content.getBoundingClientRect();
-
-  const scale = containerRect.height / contentRect.height;
-  setScale(scale);
+  const scale = container.offsetHeight / content.offsetHeight;
 
   const centerContainerX = container.offsetWidth / 2;
   const centerContainerY = container.offsetHeight / 2;
 
-  const centerContentX = contentRect.width / 2;
-  const centerContentY = contentRect.height / 2;
+  const centerContentX = content.offsetWidth / 2;
+  const centerContentY = content.offsetHeight / 2;
 
-  const multiplyer = 1 / scale;
-  const leftOffset = centerContainerX * multiplyer - centerContentX;
-  const topOffset = centerContainerY * multiplyer - centerContentY;
-
-  setPosition(leftOffset, topOffset);
+  contentScale = scale;
+  contentX = centerContainerX - centerContentX * scale;
+  contentY = centerContainerY - centerContentY * scale;
+  updateTransform();
 }
 
 function zoomTo(elementId) {
   const element = document.getElementById(elementId);
   if (element) {
-    const containerRect = container.getBoundingClientRect();
-    const contentRect = content.getBoundingClientRect();
-    const elementRect = element.getBoundingClientRect();
+    const scale = container.offsetHeight / element.offsetHeight;
 
-    const scale = containerRect.height / elementRect.height;
-    setScale(scale);
-
-    const containerCenterX = container.offsetWidth / 2;
-    const containerCenterY = container.offsetHeight / 2;
+    const centerContainerX = container.offsetWidth / 2;
+    const centerContainerY = container.offsetHeight / 2;
 
     const elementX = element.offsetLeft;
     const elementY = element.offsetTop;
+    const centerElementX = elementX + element.offsetWidth / 2;
+    const centerElementY = elementY + element.offsetHeight / 2;
 
-    const elementCenterX = elementRect.width / 2;
-    const elementCenterY = elementRect.height / 2;
-
-    const multiplyer = 1 / scale;
-    const leftOffset = containerCenterX * multiplyer - elementX - elementCenterX;
-    const topOffset = containerCenterY * multiplyer - elementY - elementCenterY;
-
-    setPosition(leftOffset, topOffset);
+    contentScale = scale;
+    contentX = centerContainerX - centerElementX * scale;
+    contentY = centerContainerY - centerElementY * scale;
+    updateTransform();
   }
 }
 
 function zoomIn() {
-  setScale(contentScale + 0.1);
+  const scale = contentScale + 0.2;
+  const scaleDiff = scale / contentScale;
+
+  const containerCenterX = container.offsetWidth / 2;
+  const containerCenterY = container.offsetHeight / 2;
+
+  const contentCenterX = contentX - containerCenterX;
+  const contentCenterY = contentY - containerCenterY;
+
+  const newOffsetX = containerCenterX * contentScale - containerCenterX * scale;
+  const newOffsetY = containerCenterY * contentScale - containerCenterY * scale;
+
+  // const centerX = contentX + viewCenterX;
+  // const centerY = contentY + viewCenterY;
+
+  contentScale = scale;
+  // contentX = newCenterX + containerCenterX;
+  // contentY = newCenterY + containerCenterY;
+  contentX = (contentX + containerCenterX) * scaleDiff - containerCenterX;
+  contentY = (contentY + containerCenterY) * scaleDiff - containerCenterY;
+  updateTransform();
+
+  // const multiplyer = 1 / scale;
+
+  // const containerWidth = container.offsetWidth;
+  // const containerHeight = container.offsetHeight;
+
+  // const width = content.offsetWidth * contentScale;
+  // const height = content.offsetHeight * contentScale;
+
+  // const left = content.offsetLeft * contentScale;
+  // const top = content.offsetTop * contentScale;
+
+  // const newWidth = width * scale;
+  // const newHeight = height * scale;
+
+  // const diffWidth = newWidth - width;
+  // const diffHeight = newHeight - height;
+
+  // const offsetLeft = (diffWidth * scale) / 2;
+  // const offsetTop = (diffHeight * scale) / 2;
+
+  // console.log({ left, originalWidth, newWidth, diffWidth, offsetLeft });
 }
 
 function zoomOut() {
-  setScale(contentScale - 0.1);
+  setScale(contentScale - 0.2);
 }
 
 function setScale(zoom) {
   if (zoom > 0.1 && zoom < 5) {
     contentScale = zoom;
-    content.style.zoom = contentScale;
+    updateTransform();
   }
 }
 
-function setPosition(left, top) {
-  content.style.left = `${left}px`;
-  content.style.top = `${top}px`;
+function updateTransform() {
+  content.style.transform = `translate(${contentX}px, ${contentY}px) scale(${contentScale})`;
 }
 
 function startDragging(event) {
-  grabbing = true;
-  setCursor();
+  isGrabbing = true;
+  updateCursor();
   initialMouseX = event.clientX;
   initialMouseY = event.clientY;
-  initialContainerX = content.offsetLeft * contentScale;
-  initialContainerY = content.offsetTop * contentScale;
+  initialContentX = contentX;
+  initialContentY = contentY;
 }
 
 function drag(event) {
-  if (!grabbing) return;
+  if (!isGrabbing) return;
   event.preventDefault();
 
   const offsetX = event.clientX - initialMouseX;
   const offsetY = event.clientY - initialMouseY;
 
-  const left = initialContainerX + offsetX;
-  const top = initialContainerY + offsetY;
-  const multiplyer = 1 / contentScale;
-  setPosition(left * multiplyer, top * multiplyer);
+  contentX = initialContentX + offsetX;
+  contentY = initialContentY + offsetY;
+  updateTransform();
 }
 
 function stopDragging() {
-  grabbing = false;
-  setCursor();
+  isGrabbing = false;
+  updateCursor();
 }
 
-function setCursor() {
-  if (grabbing) {
+function updateCursor() {
+  if (isGrabbing) {
     container.style.cursor = "grabbing";
   } else {
     container.style.cursor = "grab";
