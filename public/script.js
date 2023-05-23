@@ -109,54 +109,35 @@ function zoomTo(elementId) {
   }
 }
 
-function zoomIn() {
-  const scale = contentScale + 0.2;
-  const scaleDiff = scale / contentScale;
+/**
+ * Zoom in or out from the center.
+ * @param {number} change
+ */
+function zoom(change) {
+  const scale = contentScale + change;
+  const scaleDifference = scale / contentScale;
 
   const containerCenterX = container.offsetWidth / 2;
   const containerCenterY = container.offsetHeight / 2;
 
-  const contentCenterX = contentX - containerCenterX;
-  const contentCenterY = contentY - containerCenterY;
+  const newCenterX = (contentX - containerCenterX) * scaleDifference;
+  const newCenterY = (contentY - containerCenterY) * scaleDifference;
 
-  const newOffsetX = containerCenterX * contentScale - containerCenterX * scale;
-  const newOffsetY = containerCenterY * contentScale - containerCenterY * scale;
-
-  // const centerX = contentX + viewCenterX;
-  // const centerY = contentY + viewCenterY;
+  const offsetX = newCenterX + containerCenterX;
+  const offsetY = newCenterY + containerCenterY;
 
   contentScale = scale;
-  // contentX = newCenterX + containerCenterX;
-  // contentY = newCenterY + containerCenterY;
-  contentX = (contentX + containerCenterX) * scaleDiff - containerCenterX;
-  contentY = (contentY + containerCenterY) * scaleDiff - containerCenterY;
+  contentX = offsetX;
+  contentY = offsetY;
   updateTransform();
+}
 
-  // const multiplyer = 1 / scale;
-
-  // const containerWidth = container.offsetWidth;
-  // const containerHeight = container.offsetHeight;
-
-  // const width = content.offsetWidth * contentScale;
-  // const height = content.offsetHeight * contentScale;
-
-  // const left = content.offsetLeft * contentScale;
-  // const top = content.offsetTop * contentScale;
-
-  // const newWidth = width * scale;
-  // const newHeight = height * scale;
-
-  // const diffWidth = newWidth - width;
-  // const diffHeight = newHeight - height;
-
-  // const offsetLeft = (diffWidth * scale) / 2;
-  // const offsetTop = (diffHeight * scale) / 2;
-
-  // console.log({ left, originalWidth, newWidth, diffWidth, offsetLeft });
+function zoomIn() {
+  zoom(0.2);
 }
 
 function zoomOut() {
-  setScale(contentScale - 0.2);
+  zoom(-0.2);
 }
 
 function setScale(zoom) {
