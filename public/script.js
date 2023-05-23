@@ -148,6 +148,12 @@ function setScale(zoom) {
 }
 
 function updateTransform() {
+  // const headers = document.getElementsByTagName("h1");
+  // Array.from(headers).forEach((header) => {
+  //   const multiplyer = 1 / contentScale;
+  //   header.style.fontSize = `${Math.floor(15 * multiplyer)}px`;
+  // });
+  content.style.webkitTransform = `translate(${contentX}px, ${contentY}px) scale(${contentScale})`;
   content.style.transform = `translate(${contentX}px, ${contentY}px) scale(${contentScale})`;
 }
 

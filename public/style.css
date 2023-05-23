@@ -9,9 +9,12 @@ body {
 h1 {
   margin: 0;
   margin-bottom: 20px;
+  padding: 8px;
 
+  white-space: nowrap;
   text-align: center;
   font-size: medium;
+  font-weight: normal;
   cursor: pointer;
   color: white;
 }

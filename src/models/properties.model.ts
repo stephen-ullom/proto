@@ -58,8 +58,8 @@ export interface Border {
 
 export interface AllProperties {
   // Layout
-  width?: number;
-  height?: number;
+  width?: Value;
+  height?: Value;
   padding?: Value | Edges;
   margin?: Value | Edges;
   constraint?: Edges;
