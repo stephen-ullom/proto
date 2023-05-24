@@ -26,6 +26,7 @@ function init() {
     container.addEventListener("mousedown", startDragging);
     container.addEventListener("mousemove", drag);
     container.addEventListener("mouseup", stopDragging);
+    container.addEventListener("wheel", wheel);
   }
 }
 
@@ -55,6 +56,16 @@ function keyUp(event) {
   }
 }
 
+function wheel(event) {
+  event.preventDefault();
+  const offsetX = event.deltaX;
+  const offsetY = event.deltaY;
+
+  contentX -= offsetX;
+  contentY -= offsetY;
+  updateTransform();
+}
+
 function connect() {
   const socket = new WebSocket("ws://localhost:2000");
 
@@ -69,9 +80,7 @@ function connect() {
 }
 
 function zoomReset() {
-  contentX = 0;
-  contentY = 0;
-  setScale(1);
+  zoom(1);
 }
 
 function zoomFit() {
@@ -110,11 +119,12 @@ function zoomTo(elementId) {
 }
 
 /**
- * Zoom in or out from the center.
- * @param {number} change
+ * Zoom to a scale value from the center.
+ * @param {number} scale
  */
-function zoom(change) {
-  const scale = contentScale + change;
+function zoom(scale) {
+  scale = Math.min(5, Math.max(0.1, scale));
+
   const scaleDifference = scale / contentScale;
 
   const containerCenterX = container.offsetWidth / 2;
@@ -133,18 +143,11 @@ function zoom(change) {
 }
 
 function zoomIn() {
-  zoom(0.2);
+  zoom(contentScale * 1.2);
 }
 
 function zoomOut() {
-  zoom(-0.2);
-}
-
-function setScale(zoom) {
-  if (zoom > 0.1 && zoom < 5) {
-    contentScale = zoom;
-    updateTransform();
-  }
+  zoom(contentScale / 1.2);
 }
 
 function updateTransform() {
