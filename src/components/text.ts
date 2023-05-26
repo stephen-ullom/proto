@@ -1,13 +1,17 @@
-import { Content } from "../models/html.model";
+import { Html } from "../models/html.model";
 import { TextProperties } from "../models/properties.model";
 import { HtmlElement } from "../scripts/html-element";
 
 export function text(
-  properties: TextProperties,
-  ...children: Content[]
-): Content {
+  properties: TextProperties | Html,
+  ...children: Html[]
+): Html {
   const element = new HtmlElement("span");
-  element.setProperties(properties);
+  if (typeof properties === "object") {
+    element.addProperties(properties);
+  } else {
+    children.unshift(properties);
+  }
   element.setChildren(children);
   return element.render();
 }

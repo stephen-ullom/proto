@@ -1,14 +1,23 @@
 #!/usr/bin/env node
 
-import * as cp from "child_process";
-import * as fs from "fs";
-import * as http from "http";
-import * as path from "path";
+import cp = require("child_process");
+import fs = require("fs");
+import http = require("http");
+import path = require("path");
+import ts = require("typescript");
+
+const outFolder = ".proto";
+const sourceFolder = "source";
 
 const projectDirectory = process.cwd();
+const sourceDirectory = path.join(projectDirectory, sourceFolder);
+
 const packageJsonPath = path.resolve(projectDirectory, "package.json");
 const packageJson = require(packageJsonPath);
+
 const port = 8000;
+
+const mainPath = packageJson.main;
 
 let timeoutId: NodeJS.Timeout;
 let childProcess: cp.ChildProcessWithoutNullStreams;
@@ -71,15 +80,52 @@ function startServer(): void {
 }
 
 function watchProject(): void {
-  run();
-  fs.watch(projectDirectory, { recursive: true }, (eventType, filename) => {
+  build();
+  console.log("Watching for changes...");
+
+  fs.watch(sourceDirectory, { recursive: true }, (eventType, filename) => {
     if (filename) {
       debounce(() => {
         console.log("Change detected...");
-        run();
+        build();
       }, 100);
     }
   });
+}
+
+function build() {
+  const tsconfig = path.join(projectDirectory, "tsconfig.json");
+
+  const configFile = ts.readConfigFile(tsconfig, ts.sys.readFile);
+  const compilerOptions = ts.parseJsonConfigFileContent(
+    configFile.config,
+    ts.sys,
+    projectDirectory,
+    { outDir: outFolder }
+  ).options;
+
+  const program = ts.createProgram([mainPath], compilerOptions);
+
+  const emitResult = program.emit();
+
+  const diagnostics = ts
+    .getPreEmitDiagnostics(program)
+    .concat(emitResult.diagnostics);
+
+  if (diagnostics.length) {
+    console.error("TypeScript compilation errors:");
+    diagnostics.forEach((diagnostic) => {
+      const message = ts.flattenDiagnosticMessageText(
+        diagnostic.messageText,
+        "\n"
+      );
+      console.error(
+        `${diagnostic.file.fileName} (${diagnostic.start}): ${message}`
+      );
+    });
+  } else {
+    run();
+  }
 }
 
 function run(): void {
@@ -87,13 +133,14 @@ function run(): void {
     childProcess.kill();
   }
 
-  childProcess = cp.spawn("node", [packageJson.main], {
+  const mainFile = path.parse(mainPath).name + ".js";
+  childProcess = cp.spawn("node", [path.join(outFolder, mainFile)], {
     stdio: "inherit",
     cwd: projectDirectory,
   });
 }
 
-function debounce(func, delay): void {
+function debounce(func: () => void, delay: number): void {
   clearTimeout(timeoutId);
   timeoutId = setTimeout(func, delay);
 }

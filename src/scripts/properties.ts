@@ -23,6 +23,10 @@ export const properties: Properties = {
     true: "hidden",
     false: "visible",
   },
+  alignContent: {
+    name: "align-items",
+    type: PropertyType.Alignment,
+  },
   fillContainer: {
     name: "flex",
     type: PropertyType.Boolean,

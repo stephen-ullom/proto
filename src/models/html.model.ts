@@ -1,4 +1,4 @@
-export type Content = string | number;
+export type Html = string | number;
 
 export type CssStyles = {
   [property: string]: string;

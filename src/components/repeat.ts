@@ -1,8 +1,8 @@
-import { Content } from "../models/html.model";
+import { Html } from "../models/html.model";
 
 export function repeat(
   array: any[],
-  callback: (value: any, index: number, array: any[]) => Content
+  callback: (value: any, index: number, array: any[]) => Html
 ) {
   return array.map(callback).join("");
 }

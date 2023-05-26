@@ -7,6 +7,7 @@ export enum Alignment {
   Start = "start",
   Center = "center",
   End = "end",
+  Stretch = "stretch",
 }
 
 export enum Justification {

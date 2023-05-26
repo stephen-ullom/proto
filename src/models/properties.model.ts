@@ -75,7 +75,7 @@ export interface AllProperties {
   direction?: Direction;
   gap?: number;
   justifyContent?: Alignment | Justification;
-  alignItems?: Alignment;
+  alignContent?: Alignment;
   // Color
   backgroundColor?: string;
   // Text
@@ -89,12 +89,10 @@ export interface AllProperties {
 }
 
 export interface BoardProperties {
-  name: string;
+  name?: string;
 }
 
 export interface FrameProperties extends AllProperties {}
-
-export interface StackProperties extends AllProperties {}
 
 export interface TextProperties extends AllProperties {}
 

@@ -3,7 +3,6 @@ export * from "./components/board";
 export * from "./components/frame";
 export * from "./components/image";
 export * from "./components/include";
-export * from "./components/layout";
 export * from "./components/render";
 export * from "./components/repeat";
 export * from "./components/text";

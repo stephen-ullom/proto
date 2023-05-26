@@ -1,4 +1,4 @@
-import { CssStyles, Content, HtmlAttributes } from "../models/html.model";
+import { CssStyles, Html, HtmlAttributes } from "../models/html.model";
 import {
   Border,
   Corners,
@@ -11,7 +11,7 @@ import { properties } from "./properties";
 export class HtmlElement {
   public name: string;
   public styles: CssStyles = {};
-  public children: Content[] = [];
+  public children: Html[] = [];
 
   private attributes: HtmlAttributes = {};
 
@@ -27,9 +27,88 @@ export class HtmlElement {
     }
   }
 
-  public setProperties(properties: Properties): void {
+  public setProperty(name: string, value: any): void {
+    const property = properties[name];
+    if (property) {
+      switch (property.type) {
+        case PropertyType.Boolean:
+          this.setStyle(property.name, value ? property.true : property.false);
+          break;
+        case PropertyType.Edges:
+          this.setStyle(
+            property.name,
+            typeof value === "object" ? setEdges(value, "px") : value
+          );
+          break;
+        case PropertyType.Border:
+          this.setStyle("border-style", "solid");
+          const border = value as Border;
+          if (border.width) {
+            this.setStyle(
+              "border-width",
+              typeof border.width === "object"
+                ? setEdges(border.width, "px")
+                : border.width
+            );
+          }
+          if (border.color) {
+            this.setStyle(
+              "border-color",
+              typeof border.color === "object"
+                ? setEdges(border.color)
+                : border.color
+            );
+          }
+          if (border.style) {
+            this.setStyle(
+              "border-style",
+              typeof border.style === "object"
+                ? setEdges(border.style)
+                : border.style
+            );
+          }
+          break;
+        case PropertyType.Corners:
+          this.setStyle(
+            property.name,
+            typeof value === "object" ? setCorners(value, "px") : value
+          );
+          break;
+        case PropertyType.Constraint:
+          this.setStyle("position", "absolute");
+          const position = value as Edges;
+          if (position.vertical !== undefined) {
+            position.top = position.bottom = position.vertical;
+          }
+          if (position.horizontal !== undefined) {
+            position.left = position.right = position.horizontal;
+          }
+          if (position.top !== undefined) {
+            this.setStyle("top", position.top);
+          }
+          if (position.right !== undefined) {
+            this.setStyle("right", position.right);
+          }
+          if (position.bottom !== undefined) {
+            this.setStyle("bottom", position.bottom);
+          }
+          if (position.left !== undefined) {
+            this.setStyle("left", position.left);
+          }
+          break;
+        default:
+          this.setStyle(property.name, value);
+          break;
+      }
+    } else {
+      const cssName = name.replace(/([A-Z])/g, "-$1").toLowerCase();
+      this.setStyle(cssName, value);
+    }
+  }
+
+  public addProperties(properties: Properties): void {
     for (const [key, value] of Object.entries(properties)) {
-      setProperty(this, key, value);
+      this.setProperty(key, value);
     }
   }
 
@@ -37,13 +116,13 @@ export class HtmlElement {
     this.attributes[name] = value;
   }
 
-  public setChildren(children: Content[]) {
+  public setChildren(children: Html[]) {
     for (const child of Object.values(children)) {
       this.children.push(child);
     }
   }
 
-  public render(): Content {
+  public render(): Html {
     let styleString = "";
     for (const [key, value] of Object.entries(this.styles)) {
       styleString += `${key}:${value};`;
@@ -100,7 +179,7 @@ function setCorners(value: Corners, unit = "") {
     corners.topLeft = corners.bottomLeft = value.left;
   }
   Object.assign(corners, value);
- 
+
   const cornerList = [
     corners.topLeft,
     corners.topRight,
@@ -110,83 +189,4 @@ function setCorners(value: Corners, unit = "") {
   return cornerList
     .map((corner) => (Number.isInteger(corner) ? corner + unit : corner))
     .join(" ");
-}
-
-function setProperty(element: HtmlElement, name: string, value: any): void {
-  const property = properties[name];
-  if (property) {
-    switch (property.type) {
-      case PropertyType.Boolean:
-        element.setStyle(property.name, value ? property.true : property.false);
-        break;
-      case PropertyType.Edges:
-        element.setStyle(
-          property.name,
-          typeof value === "object" ? setEdges(value, "px") : value
-        );
-        break;
-      case PropertyType.Border:
-        element.setStyle("border-style", "solid");
-        const border = value as Border;
-        if (border.width) {
-          element.setStyle(
-            "border-width",
-            typeof border.width === "object"
-              ? setEdges(border.width, "px")
-              : border.width
-          );
-        }
-        if (border.color) {
-          element.setStyle(
-            "border-color",
-            typeof border.color === "object"
-              ? setEdges(border.color)
-              : border.color
-          );
-        }
-        if (border.style) {
-          element.setStyle(
-            "border-style",
-            typeof border.style === "object"
-              ? setEdges(border.style)
-              : border.style
-          );
-        }
-        break;
-      case PropertyType.Corners:
-        element.setStyle(
-          property.name,
-          typeof value === "object" ? setCorners(value, "px") : value
-        );
-        break;
-      case PropertyType.Constraint:
-        element.setStyle("position", "absolute");
-        const position = value as Edges;
-        if (position.vertical !== undefined) {
-          position.top = position.bottom = position.vertical;
-        }
-        if (position.horizontal !== undefined) {
-          position.left = position.right = position.horizontal;
-        }
-        if (position.top !== undefined) {
-          element.setStyle("top", position.top);
-        }
-        if (position.right !== undefined) {
-          element.setStyle("right", position.right);
-        }
-        if (position.bottom !== undefined) {
-          element.setStyle("bottom", position.bottom);
-        }
-        if (position.left !== undefined) {
-          element.setStyle("left", position.left);
-        }
-        break;
-      default:
-        element.setStyle(property.name, value);
-        break;
-    }
-  } else {
-    const cssName = name.replace(/([A-Z])/g, "-$1").toLowerCase();
-    element.setStyle(cssName, value);
-  }
 }
