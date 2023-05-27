@@ -63,7 +63,7 @@ export interface GeneralProperties {
   height?: Value;
   padding?: Value | Edges;
   margin?: Value | Edges;
-  constraint?: Edges;
+  constraint?: Value | Edges;
   fillContainer?: boolean;
   position?: Position;
   // Style

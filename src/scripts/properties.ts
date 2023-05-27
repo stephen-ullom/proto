@@ -1,7 +1,7 @@
 import { Properties, PropertyType } from "../models/properties.model";
 
 export const properties: Properties = {
-  // Layout
+  // Frame
   width: {
     type: PropertyType.Pixel,
   },
@@ -17,9 +17,23 @@ export const properties: Properties = {
   constraint: {
     type: PropertyType.Constraint,
   },
+  fillContainer: {
+    style: "flex",
+    type: PropertyType.Boolean,
+    true: "auto",
+    false: "none",
+  },
+  // Layout
   direction: {
     style: "flex-direction",
     type: PropertyType.Direction,
+  },
+  alignContent: {
+    style: "align-items",
+    type: PropertyType.Alignment,
+  },
+  gap: {
+    type: PropertyType.Pixel,
   },
   // Content
   clipContent: {
@@ -27,16 +41,6 @@ export const properties: Properties = {
     type: PropertyType.Boolean,
     true: "hidden",
     false: "visible",
-  },
-  alignContent: {
-    style: "align-items",
-    type: PropertyType.Alignment,
-  },
-  fillContainer: {
-    style: "flex",
-    type: PropertyType.Boolean,
-    true: "auto",
-    false: "none",
   },
   // Style
   cornerRadius: {
@@ -53,6 +57,9 @@ export const properties: Properties = {
   font: {
     style: "font-family",
     type: PropertyType.String,
+  },
+  fontSize: {
+    type: PropertyType.Pixel,
   },
   textColor: {
     style: "color",

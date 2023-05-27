@@ -154,7 +154,7 @@ function zoomOut() {
 }
 
 function updateTransform() {
-  // content.style.webkitTransform =
+  content.style.webkitTransform =
   content.style.transform = `translate(${contentX}px, ${contentY}px) scale(${contentScale})`;
 }
 

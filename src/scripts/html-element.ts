@@ -49,7 +49,8 @@ export class HtmlElement {
         case PropertyType.Edges:
           this.setStyle(
             style,
-            typeof value === "object" ? setEdges(value, "px") : value
+            typeof value === "object" ? setEdges(value, "px") : value,
+            "px"
           );
           break;
         case PropertyType.Border:
@@ -60,7 +61,8 @@ export class HtmlElement {
               "border-width",
               typeof border.width === "object"
                 ? setEdges(border.width, "px")
-                : border.width
+                : border.width,
+              "px"
             );
           }
           if (border.color) {
@@ -89,7 +91,12 @@ export class HtmlElement {
           break;
         case PropertyType.Constraint:
           this.setStyle("position", "absolute");
-          const position = value as Edges;
+          let position: Edges;
+          if (typeof value === "object") {
+            position = value;
+          } else {
+            position = { vertical: value, horizontal: value };
+          }
           if (position.vertical !== undefined) {
             position.top = position.bottom = position.vertical;
           }
