@@ -19,9 +19,13 @@ export class HtmlElement {
     this.name = name;
   }
 
-  public setStyle(cssProperty: string, value: string | number): void {
-    if (Number.isInteger(value)) {
-      this.styles[cssProperty] = value + "px";
+  public setStyle(
+    cssProperty: string,
+    value: string | number,
+    unit?: string
+  ): void {
+    if (unit && Number.isInteger(value)) {
+      this.styles[cssProperty] = value + unit;
     } else {
       this.styles[cssProperty] = value as string;
     }
@@ -30,13 +34,21 @@ export class HtmlElement {
   public setProperty(name: string, value: any): void {
     const property = properties[name];
     if (property) {
+      const style =
+        property.style || name.replace(/([A-Z])/g, "-$1").toLowerCase();
       switch (property.type) {
         case PropertyType.Boolean:
-          this.setStyle(property.name, value ? property.true : property.false);
+          this.setStyle(style, value ? property.true : property.false);
+          break;
+        case PropertyType.Number:
+          this.setStyle(style, value);
+          break;
+        case PropertyType.Pixel:
+          this.setStyle(style, value, "px");
           break;
         case PropertyType.Edges:
           this.setStyle(
-            property.name,
+            style,
             typeof value === "object" ? setEdges(value, "px") : value
           );
           break;
@@ -70,8 +82,9 @@ export class HtmlElement {
           break;
         case PropertyType.Corners:
           this.setStyle(
-            property.name,
-            typeof value === "object" ? setCorners(value, "px") : value
+            style,
+            typeof value === "object" ? setCorners(value, "px") : value,
+            "px"
           );
           break;
         case PropertyType.Constraint:
@@ -84,20 +97,20 @@ export class HtmlElement {
             position.left = position.right = position.horizontal;
           }
           if (position.top !== undefined) {
-            this.setStyle("top", position.top);
+            this.setStyle("top", position.top, "px");
           }
           if (position.right !== undefined) {
-            this.setStyle("right", position.right);
+            this.setStyle("right", position.right, "px");
           }
           if (position.bottom !== undefined) {
-            this.setStyle("bottom", position.bottom);
+            this.setStyle("bottom", position.bottom, "px");
           }
           if (position.left !== undefined) {
-            this.setStyle("left", position.left);
+            this.setStyle("left", position.left, "px");
           }
           break;
         default:
-          this.setStyle(property.name, value);
+          this.setStyle(style, value);
           break;
       }
     } else {

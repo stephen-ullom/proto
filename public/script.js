@@ -98,11 +98,14 @@ function zoomFit() {
   updateTransform();
 }
 
+/**
+ * Zoom to element with id
+ * @param {string} elementId
+ */
 function zoomTo(elementId) {
   const element = document.getElementById(elementId);
   if (element) {
     const scale = container.offsetHeight / element.offsetHeight;
-
     const centerContainerX = container.offsetWidth / 2;
     const centerContainerY = container.offsetHeight / 2;
 
@@ -151,12 +154,7 @@ function zoomOut() {
 }
 
 function updateTransform() {
-  // const headers = document.getElementsByTagName("h1");
-  // Array.from(headers).forEach((header) => {
-  //   const multiplyer = 1 / contentScale;
-  //   header.style.fontSize = `${Math.floor(15 * multiplyer)}px`;
-  // });
-  content.style.webkitTransform = `translate(${contentX}px, ${contentY}px) scale(${contentScale})`;
+  // content.style.webkitTransform =
   content.style.transform = `translate(${contentX}px, ${contentY}px) scale(${contentScale})`;
 }
 

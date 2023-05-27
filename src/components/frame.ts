@@ -8,7 +8,6 @@ export function frame(
   ...children: Html[]
 ): Html {
   const element = new HtmlElement("div");
-  element.setStyle("position", "relative");
   element.setStyle("display", "flex");
   element.setStyle("flex-grow", "0");
   element.setStyle("flex-shrink", "0");

@@ -2,51 +2,60 @@ import { Properties, PropertyType } from "../models/properties.model";
 
 export const properties: Properties = {
   // Layout
+  width: {
+    type: PropertyType.Pixel,
+  },
+  height: {
+    type: PropertyType.Pixel,
+  },
   padding: {
-    name: "padding",
     type: PropertyType.Edges,
   },
   margin: {
-    name: "margin",
     type: PropertyType.Edges,
   },
   constraint: {
     type: PropertyType.Constraint,
   },
   direction: {
-    name: "flex-direction",
+    style: "flex-direction",
     type: PropertyType.Direction,
   },
+  // Content
   clipContent: {
-    name: "overflow",
+    style: "overflow",
     type: PropertyType.Boolean,
     true: "hidden",
     false: "visible",
   },
   alignContent: {
-    name: "align-items",
+    style: "align-items",
     type: PropertyType.Alignment,
   },
   fillContainer: {
-    name: "flex",
+    style: "flex",
     type: PropertyType.Boolean,
     true: "auto",
     false: "none",
   },
   // Style
-  font: {
-    name: "font-family",
-    type: PropertyType.String,
-  },
-  textColor: {
-    name: "color",
-    type: PropertyType.String,
-  },
   cornerRadius: {
-    name: "border-radius",
+    style: "border-radius",
     type: PropertyType.Corners,
   },
   border: {
     type: PropertyType.Border,
+  },
+  zIndex: {
+    type: PropertyType.Number,
+  },
+  // Text
+  font: {
+    style: "font-family",
+    type: PropertyType.String,
+  },
+  textColor: {
+    style: "color",
+    type: PropertyType.String,
   },
 };

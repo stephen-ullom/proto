@@ -33,7 +33,7 @@ Properties:
   direction?: Direction;
   gap?: number;
   justifyContent?: Alignment | Justification;
-  alignItems?: Alignment;
+  alignContent?: Alignment;
   // Color
   backgroundColor?: string;
   // Text

@@ -2,11 +2,12 @@ import {
   Alignment,
   Direction,
   Justification,
+  Position,
 } from "./property-values.model.js";
 
 export interface Property {
-  name?: string;
   type: PropertyType;
+  style?: string;
   true?: string;
   false?: string;
 }
@@ -56,7 +57,7 @@ export interface Border {
   style?: string | Edges;
 }
 
-export interface AllProperties {
+export interface GeneralProperties {
   // Layout
   width?: Value;
   height?: Value;
@@ -64,20 +65,18 @@ export interface AllProperties {
   margin?: Value | Edges;
   constraint?: Edges;
   fillContainer?: boolean;
+  position?: Position;
   // Style
   cornerRadius?: Value | Corners;
   border?: {
     width?: Value | Edges;
     color?: Value | Edges;
   };
+  backgroundColor?: string;
   // Content
   clipContent?: boolean;
-  direction?: Direction;
-  gap?: number;
   justifyContent?: Alignment | Justification;
   alignContent?: Alignment;
-  // Color
-  backgroundColor?: string;
   // Text
   textColor?: string;
   font?: string;
@@ -88,17 +87,22 @@ export interface AllProperties {
   [key: string]: any;
 }
 
+export interface LayoutProperties {
+  direction?: Direction;
+  gap?: number;
+}
+
 export interface BoardProperties {
   name?: string;
 }
 
-export interface FrameProperties extends AllProperties {}
+export interface FrameProperties extends GeneralProperties, LayoutProperties {}
 
-export interface TextProperties extends AllProperties {}
+export interface TextProperties extends GeneralProperties {}
 
-export interface ImageProperties extends AllProperties {}
+export interface ImageProperties extends GeneralProperties {}
 
-export interface IncludeProperties extends AllProperties {}
+export interface IncludeProperties extends GeneralProperties {}
 
 // export interface ColorProperties {
 //   backgroundColor?: string;
@@ -116,7 +120,7 @@ export interface IncludeProperties extends AllProperties {}
 //   direction?: Direction;
 //   gap?: number;
 //   justifyContent?: Alignment | Justification;
-//   alignItems?: Alignment;
+//   alignContent?: Alignment;
 //   cornerRadius?: number;
 //   margin?: number;
 //   padding?: number | Sides;
