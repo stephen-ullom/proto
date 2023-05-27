@@ -27,6 +27,10 @@ function init() {
 
   document.addEventListener("keydown", keyDown);
   document.addEventListener("keyup", keyUp);
+  document.addEventListener("blur", () => {
+    commandPressed = false;
+    isGrabbing = false;
+  });
 
   if (container) {
     container.addEventListener("mousedown", startDragging);
