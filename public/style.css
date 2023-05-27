@@ -1,5 +1,10 @@
+:root {
+  --background-color: #202020;
+  --board-name-hover: #909090;
+}
+
 body {
-  background: #202020;
+  background: var(--background-color);
   margin: 0;
 
   overflow: hidden;
@@ -11,8 +16,8 @@ body {
 
 h1 {
   margin: 0;
-  margin-bottom: 20px;
-  padding: 8px;
+  margin-bottom: 16px;
+  padding: 4px;
 
   white-space: nowrap;
   text-align: center;
@@ -20,6 +25,10 @@ h1 {
   font-weight: normal;
   cursor: pointer;
   color: white;
+}
+
+h1:hover {
+  color: var(--board-name-hover);
 }
 
 #controls {

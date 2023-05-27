@@ -36,6 +36,27 @@ function init() {
   }
 }
 
+function connect() {
+  const socket = new WebSocket("ws://localhost:2000");
+
+  socket.addEventListener("message", (event) => {
+    if (content) {
+      content.innerHTML = event.data;
+      if (isFirstLoad) {
+        isFirstLoad = false;
+        setTimeout(() => {
+          zoomFit();
+        }, 0);
+      }
+      socket.send("Preview updated.");
+    }
+  });
+
+  socket.addEventListener("close", () => {
+    setTimeout(connect, 100);
+  });
+}
+
 function keyDown(event) {
   switch (event.key) {
     case "Meta":
@@ -71,7 +92,7 @@ function keyDown(event) {
 function keyUp(event) {
   switch (event.key) {
     case "Meta":
-      commandPressed = true;
+      commandPressed = false;
       break;
     case " ":
       stopDragging();
@@ -84,32 +105,15 @@ function wheel(event) {
   const offsetX = event.deltaX;
   const offsetY = event.deltaY;
 
-  // Move canvas
-  // contentX -= offsetX;
-  // contentY -= offsetY;
-  // updateTransform();
-
-  // Zoom canvas
-  zoom(contentScale - (offsetX + offsetY) / 400);
-}
-
-function connect() {
-  const socket = new WebSocket("ws://localhost:2000");
-
-  socket.addEventListener("message", (event) => {
-    if (content) content.innerHTML = event.data;
-    socket.send("Preview updated.");
-    if (isFirstLoad) {
-      isFirstLoad = false;
-      window.requestAnimationFrame(() => {
-        zoomFit();
-      });
-    }
-  });
-
-  socket.addEventListener("close", () => {
-    setTimeout(connect, 100);
-  });
+  if (commandPressed) {
+    // Zoom canvas
+    zoom(contentScale - (offsetX + offsetY) / 400);
+  } else {
+    // Move canvas
+    contentX -= offsetX;
+    contentY -= offsetY;
+    updateTransform();
+  }
 }
 
 function zoomReset() {
@@ -117,7 +121,9 @@ function zoomReset() {
 }
 
 function zoomFit() {
-  const scale = container.offsetHeight / content.offsetHeight;
+  const width = container.offsetWidth / content.offsetWidth;
+  const height = container.offsetHeight / content.offsetHeight;
+  const scale = Math.min(width, height);
 
   const centerContainerX = container.offsetWidth / 2;
   const centerContainerY = container.offsetHeight / 2;
