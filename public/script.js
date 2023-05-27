@@ -5,6 +5,10 @@ let contentScale = 1;
 let contentX = 0;
 let contentY = 0;
 
+let lastBoard = 0;
+
+let mouseX = 0;
+let mouseY = 0;
 let initialMouseX = 0;
 let initialMouseY = 0;
 let initialContentX = 0;
@@ -12,6 +16,8 @@ let initialContentY = 0;
 
 let isGrabbing = false;
 let commandPressed = false;
+
+let isFirstLoad = true;
 
 function init() {
   connect();
@@ -24,7 +30,7 @@ function init() {
 
   if (container) {
     container.addEventListener("mousedown", startDragging);
-    container.addEventListener("mousemove", drag);
+    container.addEventListener("mousemove", mouseMove);
     container.addEventListener("mouseup", stopDragging);
     container.addEventListener("wheel", wheel);
   }
@@ -45,6 +51,20 @@ function keyDown(event) {
         zoomReset();
       }
       break;
+    case " ":
+      startDragging();
+      break;
+    case "ArrowLeft":
+      if (lastBoard <= 1) {
+        lastBoard = 0;
+        zoomFit();
+      } else {
+        zoomToBoard(lastBoard - 1);
+      }
+      break;
+    case "ArrowRight":
+      zoomToBoard(lastBoard + 1);
+      break;
   }
 }
 
@@ -52,6 +72,9 @@ function keyUp(event) {
   switch (event.key) {
     case "Meta":
       commandPressed = true;
+      break;
+    case " ":
+      stopDragging();
       break;
   }
 }
@@ -61,9 +84,13 @@ function wheel(event) {
   const offsetX = event.deltaX;
   const offsetY = event.deltaY;
 
-  contentX -= offsetX;
-  contentY -= offsetY;
-  updateTransform();
+  // Move canvas
+  // contentX -= offsetX;
+  // contentY -= offsetY;
+  // updateTransform();
+
+  // Zoom canvas
+  zoom(contentScale - (offsetX + offsetY) / 400);
 }
 
 function connect() {
@@ -72,6 +99,12 @@ function connect() {
   socket.addEventListener("message", (event) => {
     if (content) content.innerHTML = event.data;
     socket.send("Preview updated.");
+    if (isFirstLoad) {
+      isFirstLoad = false;
+      window.requestAnimationFrame(() => {
+        zoomFit();
+      });
+    }
   });
 
   socket.addEventListener("close", () => {
@@ -121,6 +154,11 @@ function zoomTo(elementId) {
   }
 }
 
+function zoomToBoard(boardNumber) {
+  lastBoard = boardNumber;
+  zoomTo(`board${boardNumber}`);
+}
+
 /**
  * Zoom to a scale value from the center.
  * @param {number} scale
@@ -155,28 +193,33 @@ function zoomOut() {
 
 function updateTransform() {
   content.style.webkitTransform =
-  content.style.transform = `translate(${contentX}px, ${contentY}px) scale(${contentScale})`;
+    content.style.transform = `translate(${contentX}px, ${contentY}px) scale(${contentScale})`;
 }
 
-function startDragging(event) {
+function startDragging() {
   isGrabbing = true;
   updateCursor();
-  initialMouseX = event.clientX;
-  initialMouseY = event.clientY;
+
+  initialMouseX = mouseX;
+  initialMouseY = mouseY;
   initialContentX = contentX;
   initialContentY = contentY;
 }
 
-function drag(event) {
-  if (!isGrabbing) return;
+function mouseMove(event) {
   event.preventDefault();
 
-  const offsetX = event.clientX - initialMouseX;
-  const offsetY = event.clientY - initialMouseY;
+  mouseX = event.clientX;
+  mouseY = event.clientY;
 
-  contentX = initialContentX + offsetX;
-  contentY = initialContentY + offsetY;
-  updateTransform();
+  if (isGrabbing) {
+    const offsetX = mouseX - initialMouseX;
+    const offsetY = mouseY - initialMouseY;
+
+    contentX = initialContentX + offsetX;
+    contentY = initialContentY + offsetY;
+    updateTransform();
+  }
 }
 
 function stopDragging() {
