@@ -65,4 +65,7 @@ export const properties: Properties = {
     style: "color",
     type: PropertyType.String,
   },
+  textIndent: {
+    type: PropertyType.Pixel,
+  },
 };

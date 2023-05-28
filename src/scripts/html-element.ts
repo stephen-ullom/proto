@@ -1,4 +1,4 @@
-import { CssStyles, Html, HtmlAttributes } from "../models/html.model";
+import { Content, CssStyles, Html, HtmlAttributes } from "../models/html.model";
 import {
   Border,
   Corners,
@@ -11,7 +11,7 @@ import { properties } from "./properties";
 export class HtmlElement {
   public name: string;
   public styles: CssStyles = {};
-  public children: Html[] = [];
+  public children: Content[] = [];
 
   private attributes: HtmlAttributes = {};
 
@@ -136,7 +136,7 @@ export class HtmlElement {
     this.attributes[name] = value;
   }
 
-  public setChildren(children: Html[]) {
+  public setChildren(children: Content[]): void {
     for (const child of Object.values(children)) {
       this.children.push(child);
     }
@@ -178,7 +178,7 @@ function setEdges(value: Edges, unit = ""): string {
     .join(" ");
 }
 
-function setCorners(value: Corners, unit = "") {
+function setCorners(value: Corners, unit = ""): string {
   const corners: Corners = {
     topLeft: 0,
     topRight: 0,

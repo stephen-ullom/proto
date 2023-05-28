@@ -1,11 +1,11 @@
-import { Html } from "../models/html.model";
+import { Content, Html } from "../models/html.model";
 import { FrameProperties } from "../models/properties.model";
 import { Alignment } from "../models/property-values.model";
 import { HtmlElement } from "../scripts/html-element";
 
 export function frame(
-  properties: FrameProperties | Html,
-  ...children: Html[]
+  properties: FrameProperties | Content,
+  ...children: Content[]
 ): Html {
   const element = new HtmlElement("div");
   element.setStyle("display", "flex");

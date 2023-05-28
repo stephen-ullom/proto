@@ -1,4 +1,4 @@
-import { Html } from "../models/html.model";
+import { Content, Html } from "../models/html.model";
 import { BoardProperties } from "../models/properties.model";
 import { Alignment, Direction } from "../models/property-values.model";
 import { HtmlElement } from "../scripts/html-element";
@@ -6,8 +6,8 @@ import { HtmlElement } from "../scripts/html-element";
 let boardCount = 0;
 
 export function board(
-  properties: BoardProperties | Html,
-  ...children: Html[]
+  properties: BoardProperties | Content,
+  ...children: Content[]
 ): Html {
   boardCount++;
   const element = new HtmlElement("section");

@@ -1,8 +1,8 @@
 import * as WebSocket from "ws";
 
-import { Html } from "../models/html.model";
+import { Content } from "../models/html.model";
 
-export function render(...content: Html[]) {
+export function render(...content: Content[]): void {
   const sanatizedContent = content.join("").replace(/\n/g, "");
   const server = new WebSocket.Server({ port: 2000 });
   server.on("connection", (ws) => {
