@@ -81,11 +81,12 @@ function startServer(): void {
 
 function watchProject(): void {
   build();
-  console.log("Watching for changes...");
+  console.log("Watching for changes...\n");
 
   fs.watch(sourceDirectory, { recursive: true }, (eventType, filename) => {
     if (filename) {
-      debounce(() => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
         console.log("Change detected...");
         build();
       }, 100);
@@ -138,9 +139,4 @@ function run(): void {
     stdio: "inherit",
     cwd: projectDirectory,
   });
-}
-
-function debounce(func: () => void, delay: number): void {
-  clearTimeout(timeoutId);
-  timeoutId = setTimeout(func, delay);
 }

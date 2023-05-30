@@ -7,7 +7,7 @@ let boardCount = 0;
 
 export function board(
   properties: BoardProperties | Content,
-  ...children: Content[]
+  ...content: Content[]
 ): Html {
   boardCount++;
   const element = new HtmlElement("section");
@@ -25,10 +25,10 @@ export function board(
       `event.preventDefault();zoomToBoard(${boardCount});`
     );
     name.setChildren([properties.name]);
-    children.unshift(name.render());
+    content.unshift(name.render());
   } else {
-    children.unshift(properties);
+    content.unshift(properties);
   }
-  element.setChildren(children);
+  element.setChildren(content);
   return element.render();
 }

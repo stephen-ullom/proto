@@ -5,7 +5,7 @@ import { HtmlElement } from "../scripts/html-element";
 
 export function frame(
   properties: FrameProperties | Content,
-  ...children: Content[]
+  ...content: Content[]
 ): Html {
   const element = new HtmlElement("div");
   element.setStyle("display", "flex");
@@ -16,8 +16,8 @@ export function frame(
   if (typeof properties === "object") {
     element.addProperties(properties);
   } else {
-    children.unshift(properties);
+    content.unshift(properties);
   }
-  element.setChildren(children);
+  element.setChildren(content);
   return element.render();
 }

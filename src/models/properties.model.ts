@@ -77,14 +77,16 @@ export interface GeneralProperties {
   clipContent?: boolean;
   justifyContent?: Alignment | Justification;
   alignContent?: Alignment;
-  // Text
+  // Any
+  [key: string]: any;
+}
+
+export interface TxtProperties {
   textColor?: string;
   font?: string;
   fontSize?: number;
   textAlign?: Alignment;
   lineHeight?: number | string;
-  // Any
-  [key: string]: any;
 }
 
 export interface LayoutProperties {
@@ -98,40 +100,8 @@ export interface BoardProperties {
 
 export interface FrameProperties extends GeneralProperties, LayoutProperties {}
 
-export interface TextProperties extends GeneralProperties {}
+export interface TextProperties extends GeneralProperties, TxtProperties {}
 
 export interface ImageProperties extends GeneralProperties {}
 
-export interface IncludeProperties extends GeneralProperties {}
-
-// export interface ColorProperties {
-//   backgroundColor?: string;
-//   textColor?: string;
-// }
-
-// export interface BoxProperties {
-//   width?: number;
-//   height?: number;
-//   clipContent?: boolean;
-//   fillContainer?: boolean;
-// }
-
-// export interface FrameProperties extends BoxProperties, ColorProperties {
-//   direction?: Direction;
-//   gap?: number;
-//   justifyContent?: Alignment | Justification;
-//   alignContent?: Alignment;
-//   cornerRadius?: number;
-//   margin?: number;
-//   padding?: number | Sides;
-// }
-
-// export interface TextProperties {
-//   font?: string;
-//   fontSize?: number;
-//   textAlign?: Alignment;
-// }
-
-// export interface ImageProperties {
-//   [key: string]: any;
-// }
+export interface IncludeProperties extends GeneralProperties, TxtProperties {}

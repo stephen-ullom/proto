@@ -4,14 +4,14 @@ import { HtmlElement } from "../scripts/html-element";
 
 export function text(
   properties: TextProperties | Content,
-  ...children: Content[]
+  ...content: Content[]
 ): Html {
   const element = new HtmlElement("span");
   if (typeof properties === "object") {
     element.addProperties(properties);
   } else {
-    children.unshift(properties);
+    content.unshift(properties);
   }
-  element.setChildren(children);
+  element.setChildren(content);
   return element.render();
 }
