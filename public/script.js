@@ -45,14 +45,18 @@ function connect() {
 
   socket.addEventListener("message", (event) => {
     if (content) {
-      content.innerHTML = event.data;
       if (isFirstLoad) {
         isFirstLoad = false;
-        setTimeout(() => {
-          zoomFit();
-        }, 0);
+        const observer = new MutationObserver(() => {
+          requestAnimationFrame(() => {
+            zoomFit();
+          });
+          observer.disconnect();
+        });
+        observer.observe(content, { childList: true });
       }
-      socket.send("Preview updated.");
+      content.innerHTML = event.data;
+      // socket.send("Preview updated.");
     }
   });
 
