@@ -52,8 +52,8 @@ export interface Corners {
 }
 
 export interface Border {
-  width?: Edges;
-  color?: Edges;
+  width?: Value | Edges;
+  color?: string | Edges;
   style?: string | Edges;
 }
 
@@ -68,10 +68,7 @@ export interface GeneralProperties {
   position?: Position;
   // Style
   cornerRadius?: Value | Corners;
-  border?: {
-    width?: Value | Edges;
-    color?: Value | Edges;
-  };
+  border?: Border;
   backgroundColor?: string;
   // Content
   clipContent?: boolean;
