@@ -56,7 +56,7 @@ function startServer(): void {
 
   server.listen(port, () => {
     console.log(`Server listening on http://localhost:${port}\n`);
-    console.log("Watching for changes...");
+    console.log("Watching for changes...\n");
   });
 
   function getContentType(ext: string): string {
@@ -87,7 +87,7 @@ function watchProject(): void {
     if (filename) {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        // console.log("Change detected...");
+        console.log("Build successful\n");
         build();
       }, 100);
     }
