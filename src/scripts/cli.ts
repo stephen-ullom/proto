@@ -81,7 +81,7 @@ function startServer(): void {
       case ".jpeg":
         return "image/jpeg";
       case ".svg":
-        return "text/xml";
+        return "image/svg+xml";
       default:
         return "application/octet-stream";
     }
