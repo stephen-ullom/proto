@@ -28,11 +28,17 @@ watchProject();
 function startServer(): void {
   const server = http.createServer((req, res) => {
     const url = req.url.split("?")[0];
-    const filePath = path.join(
-      __dirname,
-      "../../public",
-      url === "/" ? "index.html" : url
-    );
+    const urlSegments = url.split("/").filter((value) => value);
+
+    let filePath: string;
+    if (urlSegments[0] === "assets") {
+      filePath = path.join(projectDirectory, url);
+      console.log(filePath);
+    } else if (urlSegments.length > 0) {
+      filePath = path.join(__dirname, "../../public", url);
+    } else {
+      filePath = path.join(__dirname, "../../public/index.html");
+    }
 
     fs.access(filePath, fs.constants.F_OK, (err) => {
       if (err) {
@@ -74,6 +80,8 @@ function startServer(): void {
       case ".jpg":
       case ".jpeg":
         return "image/jpeg";
+      case ".svg":
+        return "text/xml";
       default:
         return "application/octet-stream";
     }
@@ -87,7 +95,6 @@ function watchProject(): void {
     if (filename) {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        console.log("Build successful\n");
         build();
       }, 100);
     }
