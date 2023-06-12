@@ -27,10 +27,7 @@ function init() {
 
   document.addEventListener("keydown", keyDown);
   document.addEventListener("keyup", keyUp);
-  document.addEventListener("blur", () => {
-    commandPressed = false;
-    isGrabbing = false;
-  });
+  document.addEventListener("blur", reset);
 
   if (container) {
     container.addEventListener("mousedown", startDragging);
@@ -56,6 +53,7 @@ function connect() {
         observer.observe(content, { childList: true });
       }
       content.innerHTML = event.data;
+      reset();
       // socket.send("Preview updated.");
     }
   });
@@ -63,6 +61,11 @@ function connect() {
   socket.addEventListener("close", () => {
     setTimeout(connect, 100);
   });
+}
+
+function reset() {
+  commandPressed = false;
+  isGrabbing = false;
 }
 
 function keyDown(event) {
