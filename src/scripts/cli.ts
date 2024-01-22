@@ -4,7 +4,7 @@ import cp = require("child_process");
 import fs = require("fs");
 import http = require("http");
 import path = require("path");
-import ts = require("typescript");
+// import ts = require("typescript");
 
 const outFolder = ".proto";
 const sourceFolder = "source";
@@ -33,7 +33,7 @@ function startServer(): void {
     let filePath: string;
     if (urlSegments[0] === "assets") {
       filePath = path.join(projectDirectory, url);
-      console.log(filePath);
+      // console.log(filePath);
     } else if (urlSegments.length > 0) {
       filePath = path.join(__dirname, "../../public", url);
     } else {
