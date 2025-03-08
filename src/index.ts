@@ -6,6 +6,7 @@ export * from "./components/include";
 export * from "./components/render";
 export * from "./components/repeat";
 export * from "./components/text";
+export * from "./components/proto";
 
 // Scripts
 export * from "./scripts/html-element";

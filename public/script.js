@@ -1,5 +1,6 @@
 let container;
 let content;
+let scene;
 
 let contentScale = 1;
 let contentX = 0;
@@ -24,6 +25,7 @@ function init() {
 
   container = document.getElementById("container");
   content = document.getElementById("content");
+  scene = document.getElementById("scene");
 
   document.addEventListener("keydown", keyDown);
   document.addEventListener("keyup", keyUp);
@@ -41,6 +43,8 @@ function connect() {
   const socket = new WebSocket("ws://localhost:2000");
 
   socket.addEventListener("message", (event) => {
+    console.log("message", event);
+
     if (content) {
       if (isFirstLoad) {
         isFirstLoad = false;
@@ -250,4 +254,8 @@ function updateCursor() {
   } else {
     container.style.cursor = "grab";
   }
+}
+
+function sceneChange() {
+  console.log(scene.value);
 }

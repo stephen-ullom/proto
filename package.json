@@ -1,7 +1,7 @@
 {
   "name": "proto",
   "version": "1.0.0",
-  "description": "Generate application prototypes with hyperspeed.",
+  "description": "Generate application prototypes with hyper speed.",
   "author": "Stephen Ullom",
   "bin": {
     "proto": "dist/scripts/cli.js"
@@ -10,7 +10,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist/* && tsc",
-    "pack": "npm run build && npm pack"
+    "pack": "npm run build && npm pack",
+    "link": "npm link"
   },
   "dependencies": {
     "typescript": "^5.0.4",

@@ -43,3 +43,24 @@ Properties:
   textAlign?: Alignment;
   lineHeight?: number | string;
 ```
+
+## Example
+
+```ts
+import { proto } from "proto";
+
+proto(
+  {
+    name: "Components",
+    scene: () => import("./components").then((scene) => scene.ComponentScene),
+  },
+  {
+    name: "Mobile",
+    scene: () => import("./phone").then((scene) => scene.iPhoneScene),
+  },
+  {
+    name: "Tablet",
+    scene: () => import("./tablet").then((scene) => scene.iPhoneScene),
+  }
+);
+```
